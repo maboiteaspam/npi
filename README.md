@@ -8,7 +8,7 @@ Node Project Init
 
 ## Usage
 
-    npi [--verbose|-v [--]] [module1 module2]
+    npi [--verbose|-v] [-- module1 module2]
     npi [module1 module2]
 
 ## Flow
