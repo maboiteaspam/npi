@@ -36,7 +36,7 @@ npi
   .pipe(minimisted())
   .pipe(spawn('npm', ['init', '--yes'], {stdio: 'pipe'}))
   .pipe(spawn('git', ['init'], {stdio: 'pipe'}))
-  .pipe(touch('README.md', '# some'))
+  .pipe(touch('README.md', '# package\n\n## Install\n\tnpm i package --save-dev\n## Usage\n\n## More\n\n'))
   .pipe(touch('index.js'))
   .pipe(touch('package.json'))
   .pipe(touch('.gitignore', gitIgnored.join('\n')))

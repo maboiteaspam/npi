@@ -2,15 +2,15 @@
 
 node project init.
 
-# Install
+## Install
 
     npm i maboiteaspam/npi -g
 
-# Usage
+## Usage
 
     npi [-m module1 module2] [--verbose|-v]
 
-# Flow
+## Flow
 
 ```js
 var gitIgnored = [
