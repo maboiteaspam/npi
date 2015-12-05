@@ -10,8 +10,8 @@ require('console.md')({
   firstHeading: chalk.yellow.bold
 });
 
+var eventStream   = require('event-stream-writer')
 var messageRouter = require('./lib/messagerouter')
-var eventedMsg    = require('./lib/eventedmsg')
 var minimisted    = require('./lib/minimisted')
 var spawn         = require('./lib/spawn')
 var touch         = require('./lib/touch')
@@ -34,11 +34,11 @@ var npi = messageRouter('npi');
 
 npi
   .pipe(minimisted())
+  .pipe(touch('package.json'))
   .pipe(spawn('npm', ['init', '--yes'], {stdio: 'pipe'}))
   .pipe(spawn('git', ['init'], {stdio: 'pipe'}))
   .pipe(touch('README.md', '# package\n\n## Install\n\n\tnpm i package --save-dev\n\n## Usage\n\n## More\n\n'))
   .pipe(touch('index.js'))
-  .pipe(touch('package.json'))
   .pipe(touch('.gitignore', gitIgnored.join('\n')))
   .pipe(touch('playground.js'))
   .pipe(npmInstall())
@@ -53,7 +53,7 @@ npi.on('error', function (err) {
 });
 
 
-var msgListener = eventedMsg();
+var msgListener = eventStream();
 msgListener.stdout
   .pipe(messageRouter('file'))
   .pipe(extract('body', function (file) {
