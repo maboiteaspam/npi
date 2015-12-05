@@ -1,15 +1,20 @@
 #!/usr/bin/env node
 
-if (process.argv.join(' ').match(/\s+(--verbose|-v)/)) process.env['DEBUG'] = [
+var argv = require('minimist')(process.argv.slice(2));
+
+if (argv.verbose || argv.v) process.env['DEBUG'] = [
   'bubbled',
   'message-router'
 ].join(' ')
 
+
 require('console.md')();
 
+var path          = require('path')
+var fs            = require('fs')
+var _             = require('lodash')
 var eventStream   = require('event-stream-writer')
 var messageRouter = require('stream-message-router')
-var minimisted    = require('./lib/minimisted')
 var spawn         = require('./lib/spawn')
 var touch         = require('./lib/touch')
 var push          = require('./lib/push')
@@ -18,27 +23,38 @@ var pipeSpawned   = require('./lib/pipespawned')
 var npmInstall    = require('./lib/npminstall')
 
 
-var pkg = require('./package.json')
-var gitIgnored = [
+var pkg     = require('./package.json')
+var ignored = [
   'node_modules/',
   'npm-debug.log'
 ];
 var files = [];
 
+var templateVars = {
+  name        : path.basename(process.cwd()),
+  description : "Description of the module.",
+  ignored     : ignored,
+  modules     : argv['_']
+};
+
+var README      = generateTemplate('README.md.ejs', templateVars);
+var playground  = generateTemplate('playground.js.ejs', templateVars);
+var index       = generateTemplate('index.js.ejs', templateVars);
+var gitIgnore   = generateTemplate('.gitignore.ejs', templateVars);
+
+
 console.log('npi %s', pkg.version)
 
 var npi = messageRouter('npi');
-
 npi
-  .pipe(minimisted())
   .pipe(touch('package.json'))
   .pipe(spawn('npm', ['init', '--yes'], {stdio: 'pipe'}))
   .pipe(spawn('git', ['init'], {stdio: 'pipe'}))
-  .pipe(touch('README.md', '# package\n\n## Install\n\n\tnpm i package --save-dev\n\n## Usage\n\n## More\n\n'))
-  .pipe(touch('index.js'))
-  .pipe(touch('.gitignore', gitIgnored.join('\n')))
-  .pipe(touch('playground.js'))
-  .pipe(npmInstall())
+  .pipe(touch('README.md', README))
+  .pipe(touch('index.js', index))
+  .pipe(touch('.gitignore', gitIgnore))
+  .pipe(touch('playground.js', playground))
+  .pipe(npmInstall(argv['_']))
   .pipe(spawn('git', function (){
     return ['add'].concat(files)
   }, {stdio: 'pipe'}))
@@ -69,5 +85,11 @@ msgListener
 
 npi.write({
   message : 'npi',
-  body    : process.argv
+  body    : argv
 });
+
+function generateTemplate (file, vars) {
+  return _.template(
+    fs.readFileSync(path.join(__dirname, 'template', file))
+  )(vars);
+}

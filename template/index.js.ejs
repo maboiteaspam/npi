@@ -1,0 +1,7 @@
+<% modules.forEach(function (module) {
+  module = module.match(/([^/]+)$/)[1]
+  module.replace(/[-]/g, '_');
+  print("var "+module+" = require('"+module+"')\n")
+}) %>
+var module = require('<% print(name); %>');          // your code here,
+<% print((new Array(name.length).join(' '))); %>                                    // your doc here.
