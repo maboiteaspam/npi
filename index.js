@@ -1,14 +1,11 @@
 #!/usr/bin/env node
 
 if (process.argv.join(' ').match(/\s+(--verbose|-v)/)) process.env['DEBUG'] = [
-  'stream-messenger',
+  'bubbled',
   'message-router'
 ].join(' ')
 
-var chalk = require('chalk');
-require('console.md')({
-  firstHeading: chalk.yellow.bold
-});
+require('console.md')();
 
 var eventStream   = require('event-stream-writer')
 var messageRouter = require('./lib/messagerouter')
@@ -53,23 +50,21 @@ npi.on('error', function (err) {
 });
 
 
-var msgListener = eventStream();
-msgListener.stdout
+var msgListener = eventStream('message', npi);
+msgListener
   .pipe(messageRouter('file'))
   .pipe(extract('body', function (file) {
     console.mdline("file\t`%s`", file)
   }))
   .pipe(push('body', files));
 
-msgListener.stdout
+msgListener
   .pipe(messageRouter('spawn'))
   .pipe(extract('cmd', function (cmd) {
     console.log("")
     console.mdline("spawn\t`%s`", cmd)
   }))
   .pipe(pipeSpawned());
-
-npi.on('message', msgListener.stdin);
 
 
 npi.write({
