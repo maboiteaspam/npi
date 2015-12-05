@@ -21,13 +21,15 @@ var gitIgnored = [
 npi
   .pipe(spawn('npm', ['init', '--yes'], {stdio: 'pipe'}))
   .pipe(spawn('git', ['init'], {stdio: 'pipe'}))
+  .pipe(touch('README.md', '# some'))
   .pipe(touch('index.js'))
+  .pipe(touch('package.json'))
   .pipe(touch('.gitignore', gitIgnored.join('\n')))
   .pipe(touch('playground.js'))
-  .pipe(spawn('git', ['status'], {stdio: 'pipe'}))
-  .pipe(spawn('git', ['add', '-A'], {stdio: 'pipe'}))
-  .pipe(spawn('git', ['status'], {stdio: 'pipe'}))
-  .pipe(spawn('git', ['commit', '-m', 'npi:'+pkg.version], {stdio: 'pipe'}))
   .pipe(npmInstall())
+  .pipe(spawn('git', function (){
+    return ['add'].concat(files)
+  }, {stdio: 'pipe'}))
+  .pipe(spawn('git', ['commit', '-m', 'npi:'+pkg.version], {stdio: 'pipe'}))
 
 ```
