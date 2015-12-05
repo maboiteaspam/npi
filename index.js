@@ -15,6 +15,7 @@ var eventedMsg    = require('./lib/eventedmsg')
 var minimisted    = require('./lib/minimisted')
 var spawn         = require('./lib/spawn')
 var touch         = require('./lib/touch')
+var push          = require('./lib/push')
 var extract       = require('./lib/extract')
 var pipeSpawned   = require('./lib/pipespawned')
 var npmInstall    = require('./lib/npminstall')
@@ -25,6 +26,7 @@ var gitIgnored = [
   'node_modules/',
   'npm-debug.log'
 ];
+var files = [];
 
 console.log('npi %s', pkg.version)
 
@@ -34,14 +36,16 @@ npi
   .pipe(minimisted())
   .pipe(spawn('npm', ['init', '--yes'], {stdio: 'pipe'}))
   .pipe(spawn('git', ['init'], {stdio: 'pipe'}))
+  .pipe(touch('README.md', '# some'))
   .pipe(touch('index.js'))
+  .pipe(touch('package.json'))
   .pipe(touch('.gitignore', gitIgnored.join('\n')))
   .pipe(touch('playground.js'))
-  .pipe(spawn('git', ['status'], {stdio: 'pipe'}))
-  .pipe(spawn('git', ['add', '-A'], {stdio: 'pipe'}))
-  .pipe(spawn('git', ['status'], {stdio: 'pipe'}))
-  .pipe(spawn('git', ['commit', '-m', 'npi:'+pkg.version], {stdio: 'pipe'}))
   .pipe(npmInstall())
+  .pipe(spawn('git', function (){
+    return ['add'].concat(files)
+  }, {stdio: 'pipe'}))
+  .pipe(spawn('git', ['commit', '-m', 'npi:'+pkg.version], {stdio: 'pipe'}))
 ;
 
 npi.on('error', function (err) {
@@ -52,16 +56,18 @@ npi.on('error', function (err) {
 var msgListener = eventedMsg();
 msgListener.stdout
   .pipe(messageRouter('file'))
-  .pipe(extract('body', console.mdline, "file\t`%s`"));
+  .pipe(extract('body', function (file) {
+    console.mdline("file\t`%s`", file)
+  }))
+  .pipe(push('body', files));
 
 msgListener.stdout
   .pipe(messageRouter('spawn'))
-  .pipe(extract('cmd', console.mdline, "spawn\t`%s`"))
+  .pipe(extract('cmd', function (cmd) {
+    console.log("")
+    console.mdline("spawn\t`%s`", cmd)
+  }))
   .pipe(pipeSpawned());
-
-msgListener.stdout
-  .pipe(messageRouter('spawned'))
-  .pipe(extract(null, console.log, ""));
 
 npi.on('message', msgListener.stdin);
 
