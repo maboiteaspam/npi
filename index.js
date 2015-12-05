@@ -8,7 +8,7 @@ if (process.argv.join(' ').match(/\s+(--verbose|-v)/)) process.env['DEBUG'] = [
 require('console.md')();
 
 var eventStream   = require('event-stream-writer')
-var messageRouter = require('./lib/messagerouter')
+var messageRouter = require('stream-message-router')
 var minimisted    = require('./lib/minimisted')
 var spawn         = require('./lib/spawn')
 var touch         = require('./lib/touch')
