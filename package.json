@@ -2,7 +2,9 @@
   "name": "npi",
   "version": "1.0.0",
   "description": "node project init",
-  "main": "index.js",
+  "bin": {
+    "npi": "index.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

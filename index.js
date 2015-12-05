@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 
 if (process.argv.join(' ').match(/\s+(--verbose|-v)/)) process.env['DEBUG'] = [
   //'stream-messenger',
