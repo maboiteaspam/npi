@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Npi by maboiteaspam</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Npi</h1>
+        <p>node project init</p>
+
+        <p class="view"><a href="https://github.com/maboiteaspam/npi">View the Project on GitHub <small>maboiteaspam/npi</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/maboiteaspam/npi/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/maboiteaspam/npi/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/maboiteaspam/npi">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="npi" class="anchor" href="#npi" aria-hidden="true"><span class="octicon octicon-link"></span></a>npi</h1>
+
+<p>Node Project Init</p>
+
+<h2>
+<a id="install" class="anchor" href="#install" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install</h2>
+
+<pre><code>npm i maboiteaspam/npi -g
+</code></pre>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<pre><code>npi [--verbose|-v [--]] [module1 module2]
+npi [module1 module2]
+</code></pre>
+
+<h2>
+<a id="flow" class="anchor" href="#flow" aria-hidden="true"><span class="octicon octicon-link"></span></a>Flow</h2>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> ignored <span class="pl-k">=</span> [
+  <span class="pl-s"><span class="pl-pds">'</span>node_modules/<span class="pl-pds">'</span></span>,
+  <span class="pl-s"><span class="pl-pds">'</span>npm-debug.log<span class="pl-pds">'</span></span>
+];
+
+<span class="pl-k">var</span> templateVars <span class="pl-k">=</span> {
+  name        <span class="pl-k">:</span> <span class="pl-smi">path</span>.<span class="pl-en">basename</span>(<span class="pl-smi">process</span>.<span class="pl-en">cwd</span>()),
+  description <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Description of the module.<span class="pl-pds">"</span></span>,
+  ignored     <span class="pl-k">:</span> ignored,
+  modules     <span class="pl-k">:</span> argv[<span class="pl-s"><span class="pl-pds">'</span>_<span class="pl-pds">'</span></span>]
+};
+
+<span class="pl-k">var</span> npi <span class="pl-k">=</span> <span class="pl-en">messageRouter</span>(<span class="pl-s"><span class="pl-pds">'</span>npi<span class="pl-pds">'</span></span>);
+npi
+  .<span class="pl-en">pipe</span>(<span class="pl-en">touch</span>(<span class="pl-s"><span class="pl-pds">'</span>package.json<span class="pl-pds">'</span></span>))
+  .<span class="pl-en">pipe</span>(<span class="pl-en">spawn</span>(<span class="pl-s"><span class="pl-pds">'</span>npm<span class="pl-pds">'</span></span>, [<span class="pl-s"><span class="pl-pds">'</span>init<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>--yes<span class="pl-pds">'</span></span>], {stdio<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>pipe<span class="pl-pds">'</span></span>}))
+  .<span class="pl-en">pipe</span>(<span class="pl-en">spawn</span>(<span class="pl-s"><span class="pl-pds">'</span>git<span class="pl-pds">'</span></span>, [<span class="pl-s"><span class="pl-pds">'</span>init<span class="pl-pds">'</span></span>], {stdio<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>pipe<span class="pl-pds">'</span></span>}))
+  .<span class="pl-en">pipe</span>(<span class="pl-en">genTemplate</span>(tplPath, <span class="pl-s"><span class="pl-pds">'</span>README.md<span class="pl-pds">'</span></span>    , templateVars))
+  .<span class="pl-en">pipe</span>(<span class="pl-en">genTemplate</span>(tplPath, <span class="pl-s"><span class="pl-pds">'</span>playground.js<span class="pl-pds">'</span></span>, templateVars))
+  .<span class="pl-en">pipe</span>(<span class="pl-en">genTemplate</span>(tplPath, <span class="pl-s"><span class="pl-pds">'</span>index.js<span class="pl-pds">'</span></span>     , templateVars))
+  .<span class="pl-en">pipe</span>(<span class="pl-en">genTemplate</span>(tplPath, <span class="pl-s"><span class="pl-pds">'</span>.gitignore<span class="pl-pds">'</span></span>   , templateVars))
+  .<span class="pl-en">pipe</span>(<span class="pl-en">npmInstall</span>(argv[<span class="pl-s"><span class="pl-pds">'</span>_<span class="pl-pds">'</span></span>]))
+  .<span class="pl-en">pipe</span>(<span class="pl-en">spawn</span>(<span class="pl-s"><span class="pl-pds">'</span>git<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> (){
+    <span class="pl-k">return</span> [<span class="pl-s"><span class="pl-pds">'</span>add<span class="pl-pds">'</span></span>].<span class="pl-c1">concat</span>(files)
+  }, {stdio<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>pipe<span class="pl-pds">'</span></span>}))
+  .<span class="pl-en">pipe</span>(<span class="pl-en">spawn</span>(<span class="pl-s"><span class="pl-pds">'</span>git<span class="pl-pds">'</span></span>, [<span class="pl-s"><span class="pl-pds">'</span>commit<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>-m<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>npi:<span class="pl-pds">'</span></span><span class="pl-k">+</span><span class="pl-smi">pkg</span>.<span class="pl-c1">version</span>], {stdio<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>pipe<span class="pl-pds">'</span></span>}))
+;</pre></div>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/maboiteaspam">maboiteaspam</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
