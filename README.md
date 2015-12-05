@@ -14,24 +14,35 @@ node project init.
 ## Flow
 
 ```js
-var gitIgnored = [
+var ignored = [
   'node_modules/',
   'npm-debug.log'
 ];
 
+var templateVars = {
+  name        : path.basename(process.cwd()),
+  description : "Description of the module.",
+  ignored     : ignored,
+  modules     : argv['_']
+};
+
+var README      = generateTemplate('README.md.ejs', templateVars);
+var playground  = generateTemplate('playground.js.ejs', templateVars);
+var index       = generateTemplate('index.js.ejs', templateVars);
+var gitIgnore   = generateTemplate('.gitignore.ejs', templateVars);
+
 npi
-  .pipe(minimisted())
   .pipe(touch('package.json'))
   .pipe(spawn('npm', ['init', '--yes'], {stdio: 'pipe'}))
   .pipe(spawn('git', ['init'], {stdio: 'pipe'}))
-  .pipe(touch('README.md', '# package\n\n## Install\n\n\tnpm i package --save-dev\n\n## Usage\n\n## More\n\n'))
-  .pipe(touch('index.js'))
-  .pipe(touch('.gitignore', gitIgnored.join('\n')))
-  .pipe(touch('playground.js'))
-  .pipe(npmInstall())
+  .pipe(touch('README.md', README))
+  .pipe(touch('index.js', index))
+  .pipe(touch('.gitignore', gitIgnore))
+  .pipe(touch('playground.js', playground))
+  .pipe(npmInstall(argv['_']))
   .pipe(spawn('git', function (){
     return ['add'].concat(files)
   }, {stdio: 'pipe'}))
   .pipe(spawn('git', ['commit', '-m', 'npi:'+pkg.version], {stdio: 'pipe'}))
-
+;
 ```
