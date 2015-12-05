@@ -1,6 +1,6 @@
 # npi
 
-node project init.
+Node Project Init
 
 ## Install
 

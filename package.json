@@ -1,7 +1,7 @@
 {
   "name": "npi",
   "version": "1.0.0",
-  "description": "node project init",
+  "description": "Node Project Init",
   "bin": {
     "npi": "./index.js"
   },
@@ -17,13 +17,20 @@
   "license": "WTF",
   "dependencies": {
     "bubbled": "maboiteaspam/bubbled",
-    "chalk": "^1.1.1",
     "console.md": "maboiteaspam/console.md",
-    "debug": "^2.2.0",
     "event-stream-writer": "maboiteaspam/event-stream-writer",
-    "flower": "maboiteaspam/flower",
     "lodash": "^3.10.1",
     "minimist": "^1.2.0",
+    "stream-message-router": "maboiteaspam/stream-message-router",
     "stream-messenger": "maboiteaspam/stream-messenger"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maboiteaspam/npi.git"
+  },
+  "bugs": {
+    "url": "https://github.com/maboiteaspam/npi/issues"
+  },
+  "homepage": "https://github.com/maboiteaspam/npi#readme"
 }
