@@ -26,19 +26,15 @@ var templateVars = {
   modules     : argv['_']
 };
 
-var README      = generateTemplate('README.md.ejs', templateVars);
-var playground  = generateTemplate('playground.js.ejs', templateVars);
-var index       = generateTemplate('index.js.ejs', templateVars);
-var gitIgnore   = generateTemplate('.gitignore.ejs', templateVars);
-
+var npi = messageRouter('npi');
 npi
   .pipe(touch('package.json'))
   .pipe(spawn('npm', ['init', '--yes'], {stdio: 'pipe'}))
   .pipe(spawn('git', ['init'], {stdio: 'pipe'}))
-  .pipe(touch('README.md', README))
-  .pipe(touch('index.js', index))
-  .pipe(touch('.gitignore', gitIgnore))
-  .pipe(touch('playground.js', playground))
+  .pipe(genTemplate(tplPath, 'README.md'    , templateVars))
+  .pipe(genTemplate(tplPath, 'playground.js', templateVars))
+  .pipe(genTemplate(tplPath, 'index.js'     , templateVars))
+  .pipe(genTemplate(tplPath, '.gitignore'   , templateVars))
   .pipe(npmInstall(argv['_']))
   .pipe(spawn('git', function (){
     return ['add'].concat(files)
