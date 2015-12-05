@@ -8,15 +8,15 @@ node project init.
 
 # Usage
 
-    npi [-m module1 module2]
+    npi [-m module1 module2] [--verbose|-v]
 
 # Flow
 
 ```js
-    var gitIgnored = [
-      'node_modules/',
-      'npm-debug.log'
-    ];
+var gitIgnored = [
+  'node_modules/',
+  'npm-debug.log'
+];
 
 npi
   .pipe(spawn('npm', ['init', '--yes'], {stdio: 'pipe'}))
