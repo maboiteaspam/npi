@@ -63,8 +63,9 @@ msgListener.stdout
   .pipe(messageRouter('spawned'))
   .pipe(extract(null, console.log, ""));
 
-
 npi.on('message', msgListener.stdin);
+
+
 npi.write({
   message : 'npi',
   body    : process.argv
