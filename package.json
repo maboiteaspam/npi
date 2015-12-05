@@ -1,0 +1,23 @@
+{
+  "name": "npi",
+  "version": "1.0.0",
+  "description": "node project init",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node",
+    "project",
+    "init"
+  ],
+  "author": "maboiteaspam",
+  "license": "WTF",
+  "dependencies": {
+    "chalk": "^1.1.1",
+    "console.md": "maboiteaspam/console.md",
+    "debug": "^2.2.0",
+    "flower": "maboiteaspam/flower",
+    "minimist": "^1.2.0"
+  }
+}
