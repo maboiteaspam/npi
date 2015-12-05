@@ -3,7 +3,7 @@
 var argv = require('minimist')(process.argv.slice(2));
 
 if (argv.verbose || argv.v) process.env['DEBUG'] = [
-  'bubbled',
+  'bubbler',
   'message-router'
 ].join(' ')
 
