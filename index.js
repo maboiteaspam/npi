@@ -20,7 +20,6 @@ var push          = require('./lib/push')
 var extract       = require('./lib/extract')
 var genTemplate   = require('./lib/generatetemplate')
 var pipeSpawned   = require('./lib/pipespawned')
-var npmInstall    = require('./lib/npminstall')
 
 
 var pkg     = require('./package.json')
