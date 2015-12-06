@@ -91,7 +91,7 @@ npi
 
 I don t know if that helps :D
 
-```
+```js
         process
 -▶-stdin-▶|
           | var npi = stream()
