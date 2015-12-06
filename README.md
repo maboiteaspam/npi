@@ -92,51 +92,46 @@ npi
 I don t know if that helps :D
 
 ```js
-       process                    (1)
--▶-stdin-▶|                       /
-          | var npi = stream()   /
-          |    .pipe() ▼        /
+       process
+-▶-stdin-▶|                       (1)
+          | var npi = stream()    /
+          |    .pipe() ▼         /
           |       route 'npi' -----▼
           |                        |
           |      (3)               |
           |      /                 |
-          |  npi emit ◀-|          |
-          |   ▼         |          |
-          |  down       |          |
-          |   ▼         ▲          |
-          |   |    bubble ◀|       |-▶ fnT1 (spawn npm)
-          |   |            |       |    ▼
-          |   |            |       |   push()          (2)
-          |   |            ▲       |    ▼              /
-          |   |       bubble ◀|    |-▶ fnT2 -▶bubble event --▼
-          |   ▼               |    |    ▼                    |
-          |   ▼               |    |   push()                |
-          |   ▼               |    |    ▼                    |
-          |   |               ▲--◀ | ◀-------{type: 'file'  ◀|
-          |   |                    |    ▼     body: 'index'}
-          |   ▼                    |   push()
-          |   ▼                    |    ▼
-          |   |                    |-▶ fnT3
-          |   |                    |    ▼
-          |   |                    |   push()
-          |   |                    |    ▼
-          |   |                    |-▶ fnT4
+          |  npi emit()◀◀-|        |
+          |   ▼           |        |
+          |  down         |        |
+          |   ▼           ▲        |
+          |   |    bubble()◀◀|     |-▶ fnT1▶(spawn npm)
+          |   |              |          ▼ push()        (2)
+          |   |              ▲          |               /
+          |   |       bubble()◀◀|      fnT2▶▶bubble▶event▶▶▶▼
+          |   |                 |       |                   ▼
+          |   |                 |       |   {type: 'file'   ▼
+          |   |                 ▲◀◀◀◀◀◀◀◀◀◀◀◀body: 'index'}◀◀
+          |   |                         ▼
+          |   |                         ▼ push()
+          |   |                        fnT3 ▶ (inquire)
+          |   |                         ▼ push()
+          |   |                        fnT4 ▶ (git commit)
+          |   |                         ▼ push()
           |   |          (4)       (end of npi)
           |   |            \
           |   ▶-▶ var msgListener = eventStream('message', npi);
-          |        |.pipe() ▼
-          |        |   route 'file' -▼
-          |        |                 |-▶ fnT1 (extract body)
-          |        |                 |    ▼
-          |        |                 |   push()           (5)
-          |        |                 |    ▼               /
-          |        |                 |-▶ console.log(chunk)
-          |        |                 (end of msgListener)
-          |        |
-          |        |.pipe() ▼                           (5 bis)
+          |         .pipe() ▼
+          |            route 'file' -▼
+          |                          |-▶ fnT1 (extract body)  (5)
+          |                               ▼ push()           /
+          |                             fnT2 (log to console)
+          |                               ▼ push()
+          |                          (end of msgListener)
+          |     msgListener
+          |         .pipe() ▼                            (5 bis)
           |            route 'spawn' -▼                 /
-          |                           |-▶ child.stdout.pipe(stdout)
-          |                           |   child.stderr.pipe(stderr)
+          |                           |-▶ fnT1 (pipe to process)
+          |                               ▼ push()
           |                           (end of msgListener)
 ◀-stdout-◀|
    (end of process)
