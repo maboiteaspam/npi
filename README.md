@@ -100,39 +100,38 @@ I don t know if that helps :D
           |                        |
           |      (3)               |
           |      /                 |
-          |  npi emit()◀◀-|        |
+          |  npi emit()◀--|        |
           |   ▼           |        |
           |  down         |        |
           |   ▼           ▲        |
-          |   |    bubble()◀◀|     |-▶ fnT1▶(spawn npm)
-          |   |              |          ▼ push()        (2)
-          |   |              ▲          |               /
-          |   |       bubble()◀◀|      fnT2▶▶bubble▶event▶▶▶▼
-          |   |                 |       |                   ▼
-          |   |                 |       |   {type: 'file'   ▼
-          |   |                 ▲◀◀◀◀◀◀◀◀◀◀◀◀body: 'index'}◀◀
-          |   |                         ▼
-          |   |                         ▼ push()
-          |   |                        fnT3 ▶ (inquire)
-          |   |                         ▼ push()
-          |   |                        fnT4 ▶ (git commit)
-          |   |                         ▼ push()
-          |   |          (4)       (end of npi)
+          |   |    bubble()◀◀|     |-▶fnT1 (spawn npm)
+          |   |              |           ▼ push()      (2)
+          |   |              ▲           ▼            /
+          |   |       bubble()◀◀|     fnT2-▶bubble▶event----|
+          |   |                 |        ▼                  |
+          |   |                 |        ▼  {type: 'file'   |
+          |   |                 |------------body: 'index'}-|
+          |   |                          ▼ push()
+          |   |                       fnT3 (inquire)
+          |   |                          ▼ push()
+          |   |                       fnT4 (git commit)
+          |   |                          ▼ push()
+          |   |          (4)          (end of npi)
           |   |            \
           |   ▶-▶ var msgListener = eventStream('message', npi);
           |         .pipe() ▼
           |            route 'file' -▼
-          |                          |-▶ fnT1 (extract body)  (5)
-          |                               ▼ push()           /
+          |                          |-▶fnT1 (extract body)  (5)
+          |                                 ▼ push()        /
           |                             fnT2 (log to console)
-          |                               ▼ push()
-          |                          (end of msgListener)
+          |                                 ▼ push()
+          |                             (end of msgListener)
           |     msgListener
           |         .pipe() ▼                            (5 bis)
           |            route 'spawn' -▼                 /
-          |                           |-▶ fnT1 (pipe to process)
-          |                               ▼ push()
-          |                           (end of msgListener)
+          |                           |-▶fnT1 (pipe to process)
+          |                                 ▼ push()
+          |                              (end of msgListener)
 ◀-stdout-◀|
    (end of process)
 ```
