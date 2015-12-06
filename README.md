@@ -93,31 +93,33 @@ I don t know if that helps :D
 
 ```js
         process
--▶-stdin-▶|
-          | var npi = stream()
-          |   |.pipe() ▼
+-▶-stdin-▶|                           (1)
+          | var npi = stream()        /
+          |   |.pipe() ▼             /
           |   |   route 'npi' -----▼
           |   |                    |
-          |  npi                   |
-          |  emit(message)         |
-          |   ▼      ▲             |
-          |   |    bubble up       |-▶ fnT1 (spawn npm)
-          |   |            ▲       |    ▼
+          |   |     (3)            |
+          |   |     /              |
+          |  npi   /               |
+          |  emit(message)         |                      (2)
+          |   ▼      ▲             |                      /
+          |   |    bubble up       |-▶ fnT1 (spawn npm)  /
+          |   |            ▲       |    ▼               /
           |   |        bubble up   |-▶ fnT2 -▶bubble event --▼
           |   |               ▲--◀ | ◀-------{type: 'file'   |
           |   |                    |    ▼     body: 'index'}◀|
           |   ▼                    |    ▼
           |   |                    |-▶ fnT3
-          |   |                    |    ▼
-          |   |                    |-▶ fnT4
-          |   |                    (end of npi)
-          |   |
+          |   |         (4)        |    ▼
+          |   |          \         |-▶ fnT4
+          |   |           \        (end of npi)
+          |   |            \
           |   ▶-▶ var msgListener = eventStream('message', npi);
           |        |.pipe() ▼
-          |        |   route 'file' -▼
-          |        |                 |-▶ fnT1 (extract body)
-          |        |                 |    ▼
-          |        |                 |-▶ console.log(chunk)
+          |        |   route 'file' -▼                        (5)
+          |        |                 |-▶ fnT1 (extract body)  /
+          |        |                 |    ▼                  /
+          |        |                 |-▶ console.log(chunk) /
           |        |                 (end of msgListener)
           |        |.pipe() ▼
           |            route 'spawn' -▼
