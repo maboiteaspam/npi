@@ -96,30 +96,34 @@ I don t know if that helps :D
 -▶-stdin-▶|
           | var npi = stream()
           |    .pipe() ▼
-          |          route 'npi' msg -▼
-          | npi◀-|                    |
-          |  |   ▲                    |
-          |  |   |◀-fnT1 bubble◀-|    |-▶fnT1 (spawn npm)
-          |  |                   |    |   ▼
-          |  ▼                   ▲    |-▶fnT2---▶bubble event-▶|
-          |  |                   |    |   ▼                    ▼
-          |  |                   |    |   -    event{ type: message
-          |  |                   |    |   -           body: some   }
-          |  |                   |    |   -                    ▼
-          |  |                   |◀--------------------------◀-|
-          |  |                        |   -
-          |  |                        |   ▼
-          |  |                        |-▶fnT3
-          |  |                        (end of npi)
-          |  |
-          |  ▼
+          |       route 'npi' msg -▼
+          |                        |
+          |  npi                   |
+          |   |◀-emit(message)     |
+          |   ▼      ▲             |
+          |   |    bubble up       |-▶ fnT1 (spawn npm)
+          |   |            ▲       |    ▼
+          |   |        bubble up   |-▶ fnT2 --▶ bubble event -▼
+          |   |               ▲--◀ | ◀--------{ type: message |
+          |   |                    |    ▼       body: some } ◀|
+          |   |                    |    ▼
+          |   |                    |-▶ fnT3
+          |   |                    |    ▼
+          |   |                    |-▶ fnT4
+          |   |                    (end of npi)
+          |   ▼
           | var msgListener = eventStream('message', npi);
           |    .pipe() ▼
-          |         route 'file' msg -▼
-          |                           |-▶fnT1 (extract body)
-          |                           |   ▼
-          |                           |-▶console.log(chunk)
-          |                           (end of msgListener)
+          |      route 'file' msg -▼
+          |                        |-▶ fnT1 (extract body)
+          |                        |    ▼
+          |                        |-▶ console.log(chunk)
+          |                        (end of msgListener)
+          |    .pipe() ▼
+          |     route 'spawn' msg -▼
+          |                        |-▶ child.stdout.pipe(stdout)
+          |                        |   child.stderr.pipe(stderr)
+          |                        (end of msgListener)
 ◀-stdout-◀|
    (end of process)
 ```
