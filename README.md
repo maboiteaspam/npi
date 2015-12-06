@@ -95,9 +95,9 @@ I don t know if that helps :D
         process
 -▶-stdin-▶|
           | var npi = stream()
-          |    .pipe() ▼
-          |       route 'npi' msg -▼
-          |                        |
+          |   |.pipe() ▼
+          |   |   route 'npi' msg -▼
+          |   |                    |
           |  npi                   |
           |  emit(message)         |
           |   ▼      ▲             |
@@ -106,24 +106,24 @@ I don t know if that helps :D
           |   |        bubble up   |-▶ fnT2 --▶ bubble event -▼
           |   |               ▲--◀ | ◀--------{ type: message |
           |   |                    |    ▼       body: some } ◀|
-          |   |                    |    ▼
+          |   ▼                    |    ▼
           |   |                    |-▶ fnT3
           |   |                    |    ▼
           |   |                    |-▶ fnT4
           |   |                    (end of npi)
           |   ▼
-          | var msgListener = eventStream('message', npi);
-          |    .pipe() ▼
-          |      route 'file' msg -▼
-          |                        |-▶ fnT1 (extract body)
-          |                        |    ▼
-          |                        |-▶ console.log(chunk)
-          |                        (end of msgListener)
-          |    .pipe() ▼
-          |     route 'spawn' msg -▼
-          |                        |-▶ child.stdout.pipe(stdout)
-          |                        |   child.stderr.pipe(stderr)
-          |                        (end of msgListener)
+          |   |-▶var msgListener = eventStream('message', npi);
+          |        |.pipe() ▼
+          |        | route 'file' msg -▼
+          |                            |-▶ fnT1 (extract body)
+          |                            |    ▼
+          |                            |-▶ console.log(chunk)
+          |                            (end of msgListener)
+          |        .pipe() ▼
+          |        route 'spawn' msg -▼
+          |                           |-▶ child.stdout.pipe(stdout)
+          |                           |   child.stderr.pipe(stderr)
+          |                           (end of msgListener)
 ◀-stdout-◀|
    (end of process)
 ```
