@@ -103,8 +103,8 @@ I don t know if that helps :D
           |  |                   |    |   ▼
           |  ▼                   ▲    |-▶fnT2---▶bubble event-▶|
           |  |                   |    |   ▼                    ▼
-          |  |                   |    |   -      event { type:message
-          |  |                   |    |   -              body:some }
+          |  |                   |    |   -    event{ type: message
+          |  |                   |    |   -           body: some   }
           |  |                   |    |   -                    ▼
           |  |                   |◀--------------------------◀-|
           |  |                        |   -
