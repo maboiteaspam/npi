@@ -99,7 +99,7 @@ I don t know if that helps :D
           |       route 'npi' msg -▼
           |                        |
           |  npi                   |
-          |   |◀-emit(message)     |
+          |  emit(message)         |
           |   ▼      ▲             |
           |   |    bubble up       |-▶ fnT1 (spawn npm)
           |   |            ▲       |    ▼
