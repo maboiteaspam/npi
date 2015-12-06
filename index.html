@@ -126,38 +126,46 @@ npi
 
 <p>I don t know if that helps :D</p>
 
-<div class="highlight highlight-source-js"><pre>        <span class="pl-c1">process</span>
-<span class="pl-k">-</span>▶<span class="pl-k">-</span>stdin<span class="pl-k">-</span>▶<span class="pl-k">|</span>
-          <span class="pl-k">|</span> <span class="pl-k">var</span> npi <span class="pl-k">=</span> <span class="pl-en">stream</span>()
-          <span class="pl-k">|</span>   <span class="pl-k">|</span>.<span class="pl-en">pipe</span>() ▼
-          <span class="pl-k">|</span>   <span class="pl-k">|</span>   route <span class="pl-s"><span class="pl-pds">'</span>npi<span class="pl-pds">'</span></span> <span class="pl-k">----</span><span class="pl-k">-</span>▼
-          <span class="pl-k">|</span>   <span class="pl-k">|</span>                    <span class="pl-k">|</span>
-          <span class="pl-k">|</span>  npi                   <span class="pl-k">|</span>
-          <span class="pl-k">|</span>  <span class="pl-en">emit</span>(message)         <span class="pl-k">|</span>
-          <span class="pl-k">|</span>   ▼      ▲             <span class="pl-k">|</span>
-          <span class="pl-k">|</span>   <span class="pl-k">|</span>    bubble up       <span class="pl-k">|</span><span class="pl-k">-</span>▶ <span class="pl-en">fnT1</span> (spawn npm)
-          <span class="pl-k">|</span>   <span class="pl-k">|</span>            ▲       <span class="pl-k">|</span>    ▼
-          <span class="pl-k">|</span>   <span class="pl-k">|</span>        bubble up   <span class="pl-k">|</span><span class="pl-k">-</span>▶ fnT2 <span class="pl-k">-</span>▶bubble <span class="pl-c1">event</span> <span class="pl-k">--</span>▼
-          <span class="pl-k">|</span>   <span class="pl-k">|</span>               ▲<span class="pl-k">--</span>◀ <span class="pl-k">|</span> ◀<span class="pl-k">------</span><span class="pl-k">-</span>{type<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>file<span class="pl-pds">'</span></span>   <span class="pl-k">|</span>
-          <span class="pl-k">|</span>   <span class="pl-k">|</span>                    <span class="pl-k">|</span>    ▼     body<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>index<span class="pl-pds">'</span></span>}◀<span class="pl-k">|</span>
-          <span class="pl-k">|</span>   ▼                    <span class="pl-k">|</span>    ▼
-          <span class="pl-k">|</span>   <span class="pl-k">|</span>                    <span class="pl-k">|</span><span class="pl-k">-</span>▶ fnT3
-          <span class="pl-k">|</span>   <span class="pl-k">|</span>                    <span class="pl-k">|</span>    ▼
-          <span class="pl-k">|</span>   <span class="pl-k">|</span>                    <span class="pl-k">|</span><span class="pl-k">-</span>▶ fnT4
-          <span class="pl-k">|</span>   <span class="pl-k">|</span>                    (end <span class="pl-k">of</span> npi)
-          <span class="pl-k">|</span>   <span class="pl-k">|</span>
+<div class="highlight highlight-source-js"><pre>       <span class="pl-c1">process</span>
+<span class="pl-k">-</span>▶<span class="pl-k">-</span>stdin<span class="pl-k">-</span>▶<span class="pl-k">|</span>                       (<span class="pl-c1">1</span>)
+          <span class="pl-k">|</span> <span class="pl-k">var</span> npi <span class="pl-k">=</span> <span class="pl-en">stream</span>()    <span class="pl-k">/</span>
+          <span class="pl-k">|</span>    .<span class="pl-en">pipe</span>() ▼         <span class="pl-k">/</span>
+          <span class="pl-k">|</span>       route <span class="pl-s"><span class="pl-pds">'</span>npi<span class="pl-pds">'</span></span> <span class="pl-k">----</span><span class="pl-k">-</span>▼
+          <span class="pl-k">|</span>                        <span class="pl-k">|</span>
+          <span class="pl-k">|</span>      (<span class="pl-c1">3</span>)               <span class="pl-k">|</span>
+          <span class="pl-k">|</span>      <span class="pl-k">/</span>                 <span class="pl-k">|</span>
+          <span class="pl-k">|</span>  npi <span class="pl-en">emit</span>()◀<span class="pl-k">--</span><span class="pl-k">|</span>        <span class="pl-k">|</span>
+          <span class="pl-k">|</span>   ▼           <span class="pl-k">|</span>        <span class="pl-k">|</span>
+          <span class="pl-k">|</span>  down         <span class="pl-k">|</span>        <span class="pl-k">|</span>
+          <span class="pl-k">|</span>   ▼           ▲        <span class="pl-k">|</span>
+          <span class="pl-k">|</span>   <span class="pl-k">|</span>    <span class="pl-en">bubble</span>()◀◀<span class="pl-k">|</span>     <span class="pl-k">|</span><span class="pl-k">-</span>▶<span class="pl-en">fnT1</span> (spawn npm)
+          <span class="pl-k">|</span>   <span class="pl-k">|</span>              <span class="pl-k">|</span>           ▼ <span class="pl-c1">push</span>()      (<span class="pl-c1">2</span>)
+          <span class="pl-k">|</span>   <span class="pl-k">|</span>              ▲           ▼            <span class="pl-k">/</span>
+          <span class="pl-k">|</span>   <span class="pl-k">|</span>       <span class="pl-en">bubble</span>()◀◀<span class="pl-k">|</span>     fnT2 start <span class="pl-en">bubble</span>() ▶<span class="pl-k">-</span><span class="pl-k">|</span>
+          <span class="pl-k">|</span>   <span class="pl-k">|</span>                 <span class="pl-k">|</span>        ▼                  <span class="pl-k">|</span>
+          <span class="pl-k">|</span>   <span class="pl-k">|</span>                 <span class="pl-k">|</span>        ▼  {type<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>file<span class="pl-pds">'</span></span>   <span class="pl-k">|</span>
+          <span class="pl-k">|</span>   <span class="pl-k">|</span>                 <span class="pl-k">|</span><span class="pl-k">------------</span>body<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>index<span class="pl-pds">'</span></span>}<span class="pl-k">-</span><span class="pl-k">|</span>
+          <span class="pl-k">|</span>   <span class="pl-k">|</span>                          ▼ <span class="pl-c1">push</span>()
+          <span class="pl-k">|</span>   <span class="pl-k">|</span>                       <span class="pl-en">fnT3</span> (inquire)
+          <span class="pl-k">|</span>   <span class="pl-k">|</span>                          ▼ <span class="pl-c1">push</span>()
+          <span class="pl-k">|</span>   <span class="pl-k">|</span>                       <span class="pl-en">fnT4</span> (git commit)
+          <span class="pl-k">|</span>   <span class="pl-k">|</span>                          ▼ <span class="pl-c1">push</span>()
+          <span class="pl-k">|</span>   <span class="pl-k">|</span>          (<span class="pl-c1">4</span>)          (end <span class="pl-k">of</span> npi)
+          <span class="pl-k">|</span>   <span class="pl-k">|</span>            \
           <span class="pl-k">|</span>   ▶<span class="pl-k">-</span>▶ <span class="pl-k">var</span> msgListener <span class="pl-k">=</span> <span class="pl-en">eventStream</span>(<span class="pl-s"><span class="pl-pds">'</span>message<span class="pl-pds">'</span></span>, npi);
-          <span class="pl-k">|</span>        <span class="pl-k">|</span>.<span class="pl-en">pipe</span>() ▼
-          <span class="pl-k">|</span>        <span class="pl-k">|</span>   route <span class="pl-s"><span class="pl-pds">'</span>file<span class="pl-pds">'</span></span> <span class="pl-k">-</span>▼
-          <span class="pl-k">|</span>        <span class="pl-k">|</span>                 <span class="pl-k">|</span><span class="pl-k">-</span>▶ <span class="pl-en">fnT1</span> (extract body)
-          <span class="pl-k">|</span>        <span class="pl-k">|</span>                 <span class="pl-k">|</span>    ▼
-          <span class="pl-k">|</span>        <span class="pl-k">|</span>                 <span class="pl-k">|</span><span class="pl-k">-</span>▶ <span class="pl-en">console</span>.<span class="pl-c1">log</span>(chunk)
-          <span class="pl-k">|</span>        <span class="pl-k">|</span>                 (end <span class="pl-k">of</span> msgListener)
-          <span class="pl-k">|</span>        <span class="pl-k">|</span>.<span class="pl-en">pipe</span>() ▼
-          <span class="pl-k">|</span>            route <span class="pl-s"><span class="pl-pds">'</span>spawn<span class="pl-pds">'</span></span> <span class="pl-k">-</span>▼
-          <span class="pl-k">|</span>                           <span class="pl-k">|</span><span class="pl-k">-</span>▶ <span class="pl-smi">child</span>.<span class="pl-smi">stdout</span>.<span class="pl-en">pipe</span>(stdout)
-          <span class="pl-k">|</span>                           <span class="pl-k">|</span>   <span class="pl-smi">child</span>.<span class="pl-smi">stderr</span>.<span class="pl-en">pipe</span>(stderr)
-          <span class="pl-k">|</span>                           (end <span class="pl-k">of</span> msgListener)
+          <span class="pl-k">|</span>         .<span class="pl-en">pipe</span>() ▼
+          <span class="pl-k">|</span>            route <span class="pl-s"><span class="pl-pds">'</span>file<span class="pl-pds">'</span></span> <span class="pl-k">-</span>▼
+          <span class="pl-k">|</span>                          <span class="pl-k">|</span><span class="pl-k">-</span>▶<span class="pl-en">fnT1</span> (extract body)  (<span class="pl-c1">5</span>)
+          <span class="pl-k">|</span>                                 ▼ <span class="pl-c1">push</span>()        <span class="pl-k">/</span>
+          <span class="pl-k">|</span>                             <span class="pl-en">fnT2</span> (log to <span class="pl-en">console</span>)
+          <span class="pl-k">|</span>                                 ▼ <span class="pl-c1">push</span>()
+          <span class="pl-k">|</span>                             (end <span class="pl-k">of</span> msgListener)
+          <span class="pl-k">|</span>     msgListener
+          <span class="pl-k">|</span>         .<span class="pl-en">pipe</span>() ▼                            (<span class="pl-c1">5</span> bis)
+          <span class="pl-k">|</span>            route <span class="pl-s"><span class="pl-pds">'</span>spawn<span class="pl-pds">'</span></span> <span class="pl-k">-</span>▼                 <span class="pl-k">/</span>
+          <span class="pl-k">|</span>                           <span class="pl-k">|</span><span class="pl-k">-</span>▶<span class="pl-en">fnT1</span> (pipe to <span class="pl-c1">process</span>)
+          <span class="pl-k">|</span>                                 ▼ <span class="pl-c1">push</span>()
+          <span class="pl-k">|</span>                              (end <span class="pl-k">of</span> msgListener)
 ◀<span class="pl-k">-</span>stdout<span class="pl-k">-</span>◀<span class="pl-k">|</span>
    (end <span class="pl-k">of</span> <span class="pl-c1">process</span>)</pre></div>
 
