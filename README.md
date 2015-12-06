@@ -96,31 +96,31 @@ I don t know if that helps :D
 -▶-stdin-▶|
           | var npi = stream()
           |   |.pipe() ▼
-          |   |   route 'npi' msg -▼
+          |   |   route 'npi' -----▼
           |   |                    |
           |  npi                   |
           |  emit(message)         |
           |   ▼      ▲             |
           |   |    bubble up       |-▶ fnT1 (spawn npm)
           |   |            ▲       |    ▼
-          |   |        bubble up   |-▶ fnT2 --▶ bubble event -▼
-          |   |               ▲--◀ | ◀--------{ type: message |
-          |   |                    |    ▼       body: some } ◀|
+          |   |        bubble up   |-▶ fnT2 -▶bubble event --▼
+          |   |               ▲--◀ | ◀-------{type: 'file'   |
+          |   |                    |    ▼     body: 'index'}◀|
           |   ▼                    |    ▼
           |   |                    |-▶ fnT3
           |   |                    |    ▼
           |   |                    |-▶ fnT4
           |   |                    (end of npi)
-          |   ▼
-          |   |-▶var msgListener = eventStream('message', npi);
+          |   |
+          |   ▶-▶ var msgListener = eventStream('message', npi);
           |        |.pipe() ▼
-          |        | route 'file' msg -▼
-          |                            |-▶ fnT1 (extract body)
-          |                            |    ▼
-          |                            |-▶ console.log(chunk)
-          |                            (end of msgListener)
-          |        .pipe() ▼
-          |        route 'spawn' msg -▼
+          |        |   route 'file' -▼
+          |        |                 |-▶ fnT1 (extract body)
+          |        |                 |    ▼
+          |        |                 |-▶ console.log(chunk)
+          |        |                 (end of msgListener)
+          |        |.pipe() ▼
+          |            route 'spawn' -▼
           |                           |-▶ child.stdout.pipe(stdout)
           |                           |   child.stderr.pipe(stderr)
           |                           (end of msgListener)
