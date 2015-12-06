@@ -47,3 +47,12 @@ npi
     {stdio: 'inherit'}))
 ;
 ```
+
+## Read more
+
+- https://github.com/maboiteaspam/stream-messenger
+- https://github.com/maboiteaspam/stream-message-router
+- https://github.com/maboiteaspam/flower
+- https://github.com/maboiteaspam/bubbler
+- https://github.com/maboiteaspam/bubbled
+- https://github.com/maboiteaspam/event-stream-writer
