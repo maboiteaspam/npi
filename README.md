@@ -100,13 +100,13 @@ I don t know if that helps :D
           | npi◀-|                    |
           |  |   ▲                    |
           |  |   |◀-fnT1 bubble◀-|    |-▶fnT1 (spawn npm)
-          |  |                        |   ▼
+          |  |                   |    |   ▼
           |  ▼                   ▲    |-▶fnT2---▶bubble event-▶|
-          |  |                   |        ▼                    ▼
-          |  |                   |        -       {type:message, body:some}
-          |  |                   |--◀-----------------------◀-|
-          |  |                            -
-          |  |                            ▼
+          |  |                   |    |   ▼                    ▼
+          |  |                   |    |   -       {type:message, body:some}
+          |  |                   |◀--------------------------◀-|
+          |  |                        |   -
+          |  |                        |   ▼
           |  |                        |-▶fnT3
           |  |                        (end of npi)
           |  |
