@@ -15,6 +15,7 @@ var eventStream   = require('event-stream-writer')
 var messageRouter = require('stream-message-router')
 var spawn         = require('./lib/spawn')
 var touch         = require('./lib/touch')
+var bubble        = require('./lib/bubble')
 var push          = require('./lib/push')
 var extract       = require('./lib/extract')
 var genTemplate   = require('./lib/generatetemplate')
@@ -42,18 +43,21 @@ console.log('npi %s', pkg.version)
 
 var npi = messageRouter('npi');
 npi
-  .pipe(touch('package.json'))
   .pipe(spawn('npm', ['init', '--yes'], {stdio: 'pipe'}))
+  .pipe(bubble('message', {message: 'file', 'body':'package.json'}))
   .pipe(spawn('git', ['init'], {stdio: 'pipe'}))
   .pipe(genTemplate(tplPath, 'README.md'    , templateVars))
   .pipe(genTemplate(tplPath, 'playground.js', templateVars))
   .pipe(genTemplate(tplPath, 'index.js'     , templateVars))
   .pipe(genTemplate(tplPath, '.gitignore'   , templateVars))
-  .pipe(npmInstall(argv['_']))
+  .pipe(spawn('npm', function (){
+    return ['i'].concat(argv['_']).concat('--save-dev')
+  }, {stdio: 'inherit'}))
   .pipe(spawn('git', function (){
     return ['add'].concat(files)
-  }, {stdio: 'pipe'}))
-  .pipe(spawn('git', ['commit', '-m', 'npi:'+pkg.version], {stdio: 'pipe'}))
+  }, {stdio: 'inherit'}))
+  .pipe(spawn('git', ['commit', '-m', 'npi:'+pkg.version],
+    {stdio: 'inherit'}))
 ;
 
 npi.on('error', function (err) {
