@@ -11,6 +11,17 @@ Node Project Init
     npi [--verbose|-v] [-- module1 module2]
     npi [module1 module2]
 
+## Expected result
+
+```
+ - node_modules/
+ - .gitignore
+ - index.js
+ - playground.js
+ - package.json
+ - README.md
+```
+
 ## Flow
 
 ```js
