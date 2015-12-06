@@ -87,6 +87,38 @@ npi
 ;
 ```
 
+## Pipe
+
+I don t know if that helps :D
+
+```
+        process
+-▶-stdin-▶|
+          | var npi = stream()
+          |    .pipe() ▼
+          |          route 'npi' msg -▼
+          | npi◀-|                    |
+          |  |   ▲                    |
+          |  |   |◀-fnT1 bubble◀-|    |-▶fnT1-▼
+          |  ▼                   ▲         fnT2-▼-▶bubble event-▶|
+          |  |                   |              -                ▼
+          |  |                   |              -    {type:message, body:some}
+          |  |                   |--◀--------------------------◀-|
+          |  |                                  -
+          |  |                                  ▼
+          |  |                                fnT3-▼
+          |  |                                   | (end of npi)
+          |  ▼
+          | var msgListener = eventStream('message', npi);
+          |    .pipe() ▼
+          |         route 'file' msg -▼
+          |                           |-▶console.log(message.body)
+          |                           | (end of msgListener)
+◀-stdout-◀|
+   (end of process)
+```
+
+
 ## Read more
 
 - https://github.com/maboiteaspam/stream-messenger
