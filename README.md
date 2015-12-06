@@ -99,21 +99,25 @@ I don t know if that helps :D
           |          route 'npi' msg -▼
           | npi◀-|                    |
           |  |   ▲                    |
-          |  |   |◀-fnT1 bubble◀-|    |-▶fnT1-▼
-          |  ▼                   ▲         fnT2-▼-▶bubble event-▶|
-          |  |                   |              -                ▼
-          |  |                   |              -    {type:message, body:some}
-          |  |                   |--◀--------------------------◀-|
-          |  |                                  -
-          |  |                                  ▼
-          |  |                                fnT3-▼
-          |  |                                   | (end of npi)
+          |  |   |◀-fnT1 bubble◀-|    |-▶fnT1 (spawn npm)
+          |  |                        |   ▼
+          |  ▼                   ▲    |-▶fnT2---▶bubble event-▶|
+          |  |                   |        ▼                    ▼
+          |  |                   |        -       {type:message, body:some}
+          |  |                   |--◀-----------------------◀-|
+          |  |                            -
+          |  |                            ▼
+          |  |                        |-▶fnT3
+          |  |                        (end of npi)
+          |  |
           |  ▼
           | var msgListener = eventStream('message', npi);
           |    .pipe() ▼
           |         route 'file' msg -▼
-          |                           |-▶console.log(message.body)
-          |                           | (end of msgListener)
+          |                           |-▶fnT1 (extract body)
+          |                           |   ▼
+          |                           |-▶console.log(chunk)
+          |                           (end of msgListener)
 ◀-stdout-◀|
    (end of process)
 ```
