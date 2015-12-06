@@ -61,20 +61,22 @@ npi [module1 module2]
   modules     <span class="pl-k">:</span> argv[<span class="pl-s"><span class="pl-pds">'</span>_<span class="pl-pds">'</span></span>]
 };
 
-<span class="pl-k">var</span> npi <span class="pl-k">=</span> <span class="pl-en">messageRouter</span>(<span class="pl-s"><span class="pl-pds">'</span>npi<span class="pl-pds">'</span></span>);
 npi
-  .<span class="pl-en">pipe</span>(<span class="pl-en">touch</span>(<span class="pl-s"><span class="pl-pds">'</span>package.json<span class="pl-pds">'</span></span>))
   .<span class="pl-en">pipe</span>(<span class="pl-en">spawn</span>(<span class="pl-s"><span class="pl-pds">'</span>npm<span class="pl-pds">'</span></span>, [<span class="pl-s"><span class="pl-pds">'</span>init<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>--yes<span class="pl-pds">'</span></span>], {stdio<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>pipe<span class="pl-pds">'</span></span>}))
+  .<span class="pl-en">pipe</span>(<span class="pl-en">bubble</span>(<span class="pl-s"><span class="pl-pds">'</span>message<span class="pl-pds">'</span></span>, {message<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>file<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>body<span class="pl-pds">'</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">'</span>package.json<span class="pl-pds">'</span></span>}))
   .<span class="pl-en">pipe</span>(<span class="pl-en">spawn</span>(<span class="pl-s"><span class="pl-pds">'</span>git<span class="pl-pds">'</span></span>, [<span class="pl-s"><span class="pl-pds">'</span>init<span class="pl-pds">'</span></span>], {stdio<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>pipe<span class="pl-pds">'</span></span>}))
   .<span class="pl-en">pipe</span>(<span class="pl-en">genTemplate</span>(tplPath, <span class="pl-s"><span class="pl-pds">'</span>README.md<span class="pl-pds">'</span></span>    , templateVars))
   .<span class="pl-en">pipe</span>(<span class="pl-en">genTemplate</span>(tplPath, <span class="pl-s"><span class="pl-pds">'</span>playground.js<span class="pl-pds">'</span></span>, templateVars))
   .<span class="pl-en">pipe</span>(<span class="pl-en">genTemplate</span>(tplPath, <span class="pl-s"><span class="pl-pds">'</span>index.js<span class="pl-pds">'</span></span>     , templateVars))
   .<span class="pl-en">pipe</span>(<span class="pl-en">genTemplate</span>(tplPath, <span class="pl-s"><span class="pl-pds">'</span>.gitignore<span class="pl-pds">'</span></span>   , templateVars))
-  .<span class="pl-en">pipe</span>(<span class="pl-en">npmInstall</span>(argv[<span class="pl-s"><span class="pl-pds">'</span>_<span class="pl-pds">'</span></span>]))
+  .<span class="pl-en">pipe</span>(<span class="pl-en">spawn</span>(<span class="pl-s"><span class="pl-pds">'</span>npm<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> (){
+    <span class="pl-k">return</span> [<span class="pl-s"><span class="pl-pds">'</span>i<span class="pl-pds">'</span></span>].<span class="pl-c1">concat</span>(argv[<span class="pl-s"><span class="pl-pds">'</span>_<span class="pl-pds">'</span></span>]).<span class="pl-c1">concat</span>(<span class="pl-s"><span class="pl-pds">'</span>--save-dev<span class="pl-pds">'</span></span>)
+  }, {stdio<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>inherit<span class="pl-pds">'</span></span>}))
   .<span class="pl-en">pipe</span>(<span class="pl-en">spawn</span>(<span class="pl-s"><span class="pl-pds">'</span>git<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> (){
     <span class="pl-k">return</span> [<span class="pl-s"><span class="pl-pds">'</span>add<span class="pl-pds">'</span></span>].<span class="pl-c1">concat</span>(files)
-  }, {stdio<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>pipe<span class="pl-pds">'</span></span>}))
-  .<span class="pl-en">pipe</span>(<span class="pl-en">spawn</span>(<span class="pl-s"><span class="pl-pds">'</span>git<span class="pl-pds">'</span></span>, [<span class="pl-s"><span class="pl-pds">'</span>commit<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>-m<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>npi:<span class="pl-pds">'</span></span><span class="pl-k">+</span><span class="pl-smi">pkg</span>.<span class="pl-c1">version</span>], {stdio<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>pipe<span class="pl-pds">'</span></span>}))
+  }, {stdio<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>inherit<span class="pl-pds">'</span></span>}))
+  .<span class="pl-en">pipe</span>(<span class="pl-en">spawn</span>(<span class="pl-s"><span class="pl-pds">'</span>git<span class="pl-pds">'</span></span>, [<span class="pl-s"><span class="pl-pds">'</span>commit<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>-m<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>npi:<span class="pl-pds">'</span></span><span class="pl-k">+</span><span class="pl-smi">pkg</span>.<span class="pl-c1">version</span>],
+    {stdio<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>inherit<span class="pl-pds">'</span></span>}))
 ;</pre></div>
       </section>
       <footer>
