@@ -27,19 +27,58 @@ var templateVars = {
 };
 
 npi
+  // npm init
   .pipe(spawn('npm', ['init', '--yes'],
     {stdio: 'inherit'}))
   .pipe(bubble('message',
     {message: 'file', 'body':'package.json'}))
-  .pipe(spawn('git', ['init'],
-    {stdio: 'inherit'}))
+
+  // gather user input
+  .pipe(input('Input the module\'s description :',
+    templateVars, 'description'))
+  .pipe(input('Input the module\'s keywords :',
+    templateVars, 'keywords'))
+  .pipe(choose('Please choose a licence :',
+    templateVars, 'licence'))
+  .pipe( !argv['_'].length
+    ? input('Input the module\'s dependencies :',
+    templateVars, 'dependencies')
+    : streamMsger('skip') )
+  .pipe(input('Input the module\'s devDep\'s :',
+    templateVars, 'devDependencies'))
+
+   //generate templates
   .pipe(genTemplate(tplPath, 'README.md'    , templateVars))
   .pipe(genTemplate(tplPath, 'playground.js', templateVars))
   .pipe(genTemplate(tplPath, 'index.js'     , templateVars))
   .pipe(genTemplate(tplPath, '.gitignore'   , templateVars))
+
+  // npm module install
   .pipe(spawn('npm', function (){
-    return ['i'].concat(argv['_']).concat('--save-dev')
+    var modules = templateVars.dependencies
+      .replace(/^\s+/, '').replace(/\s+$/, '').split(/\s/);
+    if (!modules.length || !modules[0].length) return false;
+    return ['i'].concat(modules).concat('--save');
   }, {stdio: 'inherit'}))
+  .pipe(spawn('npm', function (){
+    var modules = templateVars.devDependencies
+      .replace(/^\s+/, '').replace(/\s+$/, '').split(/\s/);
+    if (!modules.length || !modules[0].length) return false;
+    return ['i'].concat(modules).concat('--save-dev');
+  }, {stdio: 'inherit'}))
+
+  // fix package.json file
+  .pipe(updatePkg('package.json', function () {
+    return {
+      licence         : templateVars.licence,
+      description     : templateVars.description,
+      keywords        : templateVars.keywords.split(/\s/)
+    };
+  }))
+
+  // git init, add, commit
+  .pipe(spawn('git', ['init'],
+    {stdio: 'inherit'}))
   .pipe(spawn('git', function (){
     return ['add'].concat(files)
   }, {stdio: 'inherit'}))

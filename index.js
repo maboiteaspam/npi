@@ -15,7 +15,7 @@ var eventStream   = require('event-stream-writer')
 var streamMsger   = require('stream-messenger')
 var messageRouter = require('stream-message-router')
 var spawn         = require('./lib/spawn')
-var chooseLicence = require('./lib/inquire-licence')
+var choose        = require('./lib/inquire-licence')
 var input         = require('./lib/inquire-input')
 var bubble        = require('./lib/bubble')
 var push          = require('./lib/push')
@@ -53,42 +53,50 @@ npi
     {stdio: 'inherit'}))
   .pipe(bubble('message',
     {message: 'file', 'body':'package.json'}))
+
   // gather user input
-  .pipe(input('Input the module\'s description :', templateVars, 'description'))
-  .pipe(input('Input the module\'s keywords :', templateVars, 'keywords'))
-  .pipe(chooseLicence('Please choose a licence :', templateVars, 'licence'))
+  .pipe(input('Input the module\'s description :',
+    templateVars, 'description'))
+  .pipe(input('Input the module\'s keywords :',
+    templateVars, 'keywords'))
+  .pipe(choose('Please choose a licence :',
+    templateVars, 'licence'))
   .pipe( !argv['_'].length
-    ? input('Input the module\'s dependencies :', templateVars, 'dependencies')
+    ? input('Input the module\'s dependencies :',
+    templateVars, 'dependencies')
     : streamMsger('skip') )
-  .pipe(input('Input the module\'s devDependencies :', templateVars, 'devDependencies'))
+  .pipe(input('Input the module\'s devDep\'s :',
+    templateVars, 'devDependencies'))
+
    //generate templates
   .pipe(genTemplate(tplPath, 'README.md'    , templateVars))
   .pipe(genTemplate(tplPath, 'playground.js', templateVars))
   .pipe(genTemplate(tplPath, 'index.js'     , templateVars))
   .pipe(genTemplate(tplPath, '.gitignore'   , templateVars))
+
   // npm module install
   .pipe(spawn('npm', function (){
     var modules = templateVars.dependencies
-      .replace(/^\s+/, '')
-      .replace(/\s+$/, '')
-      .split(/\s/);
+      .replace(/^\s+/, '').replace(/\s+$/, '').split(/\s/);
     if (!modules.length || !modules[0].length) return false;
     return ['i'].concat(modules).concat('--save');
   }, {stdio: 'inherit'}))
   .pipe(spawn('npm', function (){
     var modules = templateVars.devDependencies
-      .replace(/^\s+/, '')
-      .replace(/\s+$/, '')
-      .split(/\s/);
+      .replace(/^\s+/, '').replace(/\s+$/, '').split(/\s/);
     if (!modules.length || !modules[0].length) return false;
     return ['i'].concat(modules).concat('--save-dev');
   }, {stdio: 'inherit'}))
-  .pipe(updatePkg('package.json', function () { return {
-    licence         : templateVars.licence,
-    description     : templateVars.description,
-    keywords        : templateVars.keywords.split(/\s/)
-  };
+
+  // fix package.json file
+  .pipe(updatePkg('package.json', function () {
+    return {
+      licence         : templateVars.licence,
+      description     : templateVars.description,
+      keywords        : templateVars.keywords.split(/\s/)
+    };
   }))
+
   // git init, add, commit
   .pipe(spawn('git', ['init'],
     {stdio: 'inherit'}))
