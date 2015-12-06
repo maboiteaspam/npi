@@ -19,6 +19,7 @@
     "bubbled": "maboiteaspam/bubbled",
     "console.md": "maboiteaspam/console.md",
     "event-stream-writer": "maboiteaspam/event-stream-writer",
+    "inquirer": "^0.11.0",
     "lodash": "^3.10.1",
     "minimist": "^1.2.0",
     "stream-message-router": "maboiteaspam/stream-message-router",

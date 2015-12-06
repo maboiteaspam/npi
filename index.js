@@ -12,14 +12,17 @@ require('console.md')();
 
 var path          = require('path')
 var eventStream   = require('event-stream-writer')
+var streamMsger   = require('stream-messenger')
 var messageRouter = require('stream-message-router')
 var spawn         = require('./lib/spawn')
-var touch         = require('./lib/touch')
+var chooseLicence = require('./lib/inquire-licence')
+var input         = require('./lib/inquire-input')
 var bubble        = require('./lib/bubble')
 var push          = require('./lib/push')
 var extract       = require('./lib/extract')
 var genTemplate   = require('./lib/generatetemplate')
 var pipeSpawned   = require('./lib/pipespawned')
+var updatePkg     = require('./lib/updatepackage')
 
 
 var pkg     = require('./package.json')
@@ -31,10 +34,13 @@ var ignored = [
 
 var tplPath       = path.join(__dirname, 'template');
 var templateVars  = {
-  name        : path.basename(process.cwd()),
-  description : "Description of the module.",
-  ignored     : ignored,
-  modules     : argv['_']
+  name            : path.basename(process.cwd()),
+  description     : "Description of the module.",
+  licence         : 'WTF',
+  keywords        : '',
+  ignored         : ignored,
+  dependencies    : argv['_'].join(' ') + ' ',
+  devDependencies : ''
 };
 
 
@@ -42,19 +48,50 @@ console.log('npi %s', pkg.version)
 
 var npi = messageRouter('npi');
 npi
+  // npm init
   .pipe(spawn('npm', ['init', '--yes'],
     {stdio: 'inherit'}))
   .pipe(bubble('message',
     {message: 'file', 'body':'package.json'}))
-  .pipe(spawn('git', ['init'],
-    {stdio: 'inherit'}))
+  // gather user input
+  .pipe(input('Input the module\'s description :', templateVars, 'description'))
+  .pipe(input('Input the module\'s keywords :', templateVars, 'keywords'))
+  .pipe(chooseLicence('Please choose a licence :', templateVars, 'licence'))
+  .pipe( !argv['_'].length
+    ? input('Input the module\'s dependencies :', templateVars, 'dependencies')
+    : streamMsger('skip') )
+  .pipe(input('Input the module\'s devDependencies :', templateVars, 'devDependencies'))
+   //generate templates
   .pipe(genTemplate(tplPath, 'README.md'    , templateVars))
   .pipe(genTemplate(tplPath, 'playground.js', templateVars))
   .pipe(genTemplate(tplPath, 'index.js'     , templateVars))
   .pipe(genTemplate(tplPath, '.gitignore'   , templateVars))
+  // npm module install
   .pipe(spawn('npm', function (){
-    return ['i'].concat(argv['_']).concat('--save-dev')
+    var modules = templateVars.dependencies
+      .replace(/^\s+/, '')
+      .replace(/\s+$/, '')
+      .split(/\s/);
+    if (!modules.length || !modules[0].length) return false;
+    return ['i'].concat(modules).concat('--save');
   }, {stdio: 'inherit'}))
+  .pipe(spawn('npm', function (){
+    var modules = templateVars.devDependencies
+      .replace(/^\s+/, '')
+      .replace(/\s+$/, '')
+      .split(/\s/);
+    if (!modules.length || !modules[0].length) return false;
+    return ['i'].concat(modules).concat('--save-dev');
+  }, {stdio: 'inherit'}))
+  .pipe(updatePkg('package.json', function () { return {
+    licence         : templateVars.licence,
+    description     : templateVars.description,
+    keywords        : templateVars.keywords.split(/\s/)
+  };
+  }))
+  // git init, add, commit
+  .pipe(spawn('git', ['init'],
+    {stdio: 'inherit'}))
   .pipe(spawn('git', function (){
     return ['add'].concat(files)
   }, {stdio: 'inherit'}))
