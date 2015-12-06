@@ -27,9 +27,12 @@ var templateVars = {
 };
 
 npi
-  .pipe(spawn('npm', ['init', '--yes'], {stdio: 'pipe'}))
-  .pipe(bubble('message', {message: 'file', 'body':'package.json'}))
-  .pipe(spawn('git', ['init'], {stdio: 'pipe'}))
+  .pipe(spawn('npm', ['init', '--yes'],
+    {stdio: 'inherit'}))
+  .pipe(bubble('message',
+    {message: 'file', 'body':'package.json'}))
+  .pipe(spawn('git', ['init'],
+    {stdio: 'inherit'}))
   .pipe(genTemplate(tplPath, 'README.md'    , templateVars))
   .pipe(genTemplate(tplPath, 'playground.js', templateVars))
   .pipe(genTemplate(tplPath, 'index.js'     , templateVars))
