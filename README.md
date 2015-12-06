@@ -107,7 +107,7 @@ I don t know if that helps :D
           |   |    bubble()◀◀|     |-▶fnT1 (spawn npm)
           |   |              |           ▼ push()      (2)
           |   |              ▲           ▼            /
-          |   |       bubble()◀◀|     fnT2-▶bubble▶event----|
+          |   |       bubble()◀◀|     fnT2 start bubble() ▶-|
           |   |                 |        ▼                  |
           |   |                 |        ▼  {type: 'file'   |
           |   |                 |------------body: 'index'}-|
