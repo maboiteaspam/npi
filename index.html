@@ -31,7 +31,7 @@
         <h1>
 <a id="npi" class="anchor" href="#npi" aria-hidden="true"><span class="octicon octicon-link"></span></a>npi</h1>
 
-<p>Node Project Init</p>
+<p>Node Project Init. A bit more than <code>npm init -y</code>.</p>
 
 <h2>
 <a id="install" class="anchor" href="#install" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install</h2>
@@ -45,6 +45,31 @@
 <pre><code>npi [--verbose|-v] [-- module1 module2]
 npi [module1 module2]
 </code></pre>
+
+<h2>
+<a id="expected-result" class="anchor" href="#expected-result" aria-hidden="true"><span class="octicon octicon-link"></span></a>Expected result</h2>
+
+<p>A minimal bunch of files to get on work, cooked just for you.</p>
+
+<pre><code> - node_modules/
+ - .gitignore
+ - index.js
+ - playground.js
+ - package.json
+ - README.md
+</code></pre>
+
+<p><code>package.json</code> is updated to add <code>description</code>, <code>licence</code>, <code>keyword</code> <strong>and</strong> a minimal workflow to tag,</p>
+
+<p><strong>npm run patch</strong> : To increase patch number of your package.</p>
+
+<p><strong>npm run minor</strong> : To increase minor number of your package.</p>
+
+<p><strong>npm run major</strong> : To increase major ... you got it.</p>
+
+<p>The reason of this workflow is to enforce a better usage of <code>semver</code>.</p>
+
+<p>Please check more about it at <a href="https://github.com/rvagg/npm-explicit-deps">https://github.com/rvagg/npm-explicit-deps</a></p>
 
 <h2>
 <a id="flow" class="anchor" href="#flow" aria-hidden="true"><span class="octicon octicon-link"></span></a>Flow</h2>
