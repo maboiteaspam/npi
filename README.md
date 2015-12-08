@@ -38,6 +38,8 @@ The reason of this workflow is to enforce a better usage of `semver`.
 
 Please check more about it at https://github.com/rvagg/npm-explicit-deps
 
+Read also about `npm version` https://docs.npmjs.com/cli/version
+
 ##### windows
 
 So far, it is expected to __fail__, need to check about
