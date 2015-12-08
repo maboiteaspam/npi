@@ -12,7 +12,7 @@
     "major": "npm version major -m \"patch %s\"",
     "preversion": "echo \"npm test: undefined\" && node ./node_modules/.bin/npm-explicit-deps -y",
     "version": "echo \"npm run build: undefined\"",
-    "postversion": "echo \"git push && git push --tags\""
+    "postversion": "git push && git push --tags"
   },
   "keywords": [
     "node",
