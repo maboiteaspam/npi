@@ -38,7 +38,42 @@ The reason of this workflow is to enforce a better usage of `semver`.
 
 Please check more about it at https://github.com/rvagg/npm-explicit-deps
 
-## Flow
+##### windows
+
+So far, it is expected to __fail__, need to check about
+
+- https://github.com/ForbesLindesay/win-spawn
+- https://github.com/MarcDiethelm/superspawn
+- https://github.com/featurist/spawn-cmd
+
+### Complete your workflow
+
+To go further you can check about those repo
+
+- https://github.com/commitizen/cz-cli
+- https://github.com/bahmutov/npm-module-checklist
+
+There s also plenty of grunt, gulp and other modules if you like.
+
+## Operations Flow
+
+#### For humans only,
+
+- npm init --yes
+- ask you about module description
+- ask you about module keywords
+- ask you about module licence
+- ask you about module dependencies, unless provided.
+- ask you about module dev-dependencies
+- generate your files
+- npm i [your dependencies]
+- npm i [your dev-dependencies]
+- fix various things in the `package.json` file, for lazy people
+- git init
+- git add <generated files only>
+- git commit -m 'npi:version'
+
+#### Everyone else,
 
 ```js
 var ignored = [
@@ -97,6 +132,14 @@ npi
   // fix package.json file
   .pipe(updatePkg('package.json', function () {
     return {
+      scripts          : {
+        "patch": "npm version patch -m \"patch %s\"",
+        "minor": "npm version minor -m \"patch %s\"",
+        "major": "npm version major -m \"patch %s\"",
+        "preversion": "echo \"npm test: undefined\" && node node_modules/.bin/npm-explicit-deps -y",
+        "version": "echo \"npm run build: undefined\"",
+        "postversion": "git push && git push --tags"
+      },
       licence         : templateVars.licence,
       description     : templateVars.description,
       keywords        : templateVars.keywords.split(/\s/)
@@ -114,9 +157,28 @@ npi
 ;
 ```
 
-## Pipe
+## About the code
 
-I don t know if that helps :D
+TLDR: It use a main stream `npi` on which transforms are piped to.
+
+They execute in sequence, time management is totally left to the underlying pipe system.
+
+To communicate with the user along the commands, `npi` will bubble events to the `source` stream.
+
+`msgListener` a dedicated stream is setup to listen `npi` stream  `message event`s.
+
+It then route chunks to specific transforms which are responsible to display an output given the type of message.
+
+The type of events you may encounter are
+
+When a file is created : `{message: 'file', body:'path'}`
+
+When a process spawns : `{message: 'spawn', body:child_process}`
+
+When a process has spawned (child_process.close event) : `{message: 'spawned', body:child_process}`
+
+
+May this drawing you to jump in the code,
 
 ```js
        process

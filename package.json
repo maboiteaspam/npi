@@ -8,8 +8,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "patch": "npm version patch -m \"patch %s\"",
-    "minor": "npm version minor -m \"patch %s\"",
-    "major": "npm version major -m \"patch %s\"",
+    "minor": "npm version minor -m \"minor %s\"",
+    "major": "npm version major -m \"major %s\"",
     "preversion": "echo \"npm test: undefined\" && node ./node_modules/.bin/npm-explicit-deps -y",
     "version": "echo \"npm run build: undefined\"",
     "postversion": "git push && git push --tags"
