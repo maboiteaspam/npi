@@ -10,7 +10,7 @@
     "patch": "npm version patch -m \"patch %s\"",
     "minor": "npm version minor -m \"patch %s\"",
     "major": "npm version major -m \"patch %s\"",
-    "preversion": "echo \"npm test: undefined\" && node node_modules/bin/npm-explicit-deps -y",
+    "preversion": "echo \"npm test: undefined\" && node ./node_modules/bin/npm-explicit-deps -y",
     "version": "echo \"npm run build: undefined\"",
     "postversion": "echo \"git push && git push --tags\""
   },
