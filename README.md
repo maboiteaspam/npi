@@ -1,6 +1,6 @@
 # npi
 
-Node Project Init
+Node Project Init. A bit more than `npm init -y`.
 
 ## Install
 
@@ -13,6 +13,8 @@ Node Project Init
 
 ## Expected result
 
+A minimal bunch of files to get on work, cooked just for you.
+
 ```
  - node_modules/
  - .gitignore
@@ -21,6 +23,20 @@ Node Project Init
  - package.json
  - README.md
 ```
+
+`package.json` is updated to add `description`, `licence`, `keyword` __and__ a minimal workflow to tag,
+
+
+__npm run patch__ : To increase patch number of your package.
+
+__npm run minor__ : To increase patch number of your package.
+
+__npm run major__ : To increase patch number of your package.
+
+
+The reason of this workflow is to enforce a better usage of `semver`.
+
+Please check more about it at https://github.com/rvagg/npm-explicit-deps
 
 ## Flow
 

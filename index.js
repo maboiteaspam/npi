@@ -91,6 +91,14 @@ npi
   // fix package.json file
   .pipe(updatePkg('package.json', function () {
     return {
+      scripts          : {
+        "patch": "npm version patch -m \"patch %s\"",
+        "minor": "npm version minor -m \"patch %s\"",
+        "major": "npm version major -m \"patch %s\"",
+        "preversion": "echo \"npm test: undefined\" && node node_modules/bin/npm-explicit-deps -y && (git commit -m \"explicit-deps\" || true)",
+        "version": "echo \"npm run build: undefined\"",
+        "postversion": "git push && git push --tags"
+      },
       licence         : templateVars.licence,
       description     : templateVars.description,
       keywords        : templateVars.keywords.split(/\s/)
