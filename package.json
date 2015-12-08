@@ -6,7 +6,13 @@
     "npi": "./index.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "patch": "npm version patch -m \"patch %s\"",
+    "minor": "npm version minor -m \"patch %s\"",
+    "major": "npm version major -m \"patch %s\"",
+    "preversion": "echo \"npm test: undefined\" && npm-explicit-deps -y && (git commit -m \"explicit-deps\" || true)",
+    "version": "echo \"npm run build: undefined\"",
+    "postversion": "git push && git push --tags"
   },
   "keywords": [
     "node",
@@ -19,9 +25,9 @@
     "bubbled": "maboiteaspam/bubbled",
     "console.md": "maboiteaspam/console.md",
     "event-stream-writer": "maboiteaspam/event-stream-writer",
-    "inquirer": "^0.11.0",
-    "lodash": "^3.10.1",
-    "minimist": "^1.2.0",
+    "inquirer": ">=0.11.0 <1.0.0-0",
+    "lodash": ">=3.10.1 <4.0.0-0",
+    "minimist": ">=1.2.0 <2.0.0-0",
     "stream-message-router": "maboiteaspam/stream-message-router",
     "stream-messenger": "maboiteaspam/stream-messenger"
   },
