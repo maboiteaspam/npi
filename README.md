@@ -29,9 +29,9 @@ A minimal bunch of files to get on work, cooked just for you.
 
 __npm run patch__ : To increase patch number of your package.
 
-__npm run minor__ : To increase patch number of your package.
+__npm run minor__ : To increase minor number of your package.
 
-__npm run major__ : To increase patch number of your package.
+__npm run major__ : To increase major ... you got it.
 
 
 The reason of this workflow is to enforce a better usage of `semver`.
