@@ -40,7 +40,7 @@ var templateVars  = {
   keywords        : '',
   ignored         : ignored,
   dependencies    : argv['_'].join(' ') + ' ',
-  devDependencies : ''
+  devDependencies : 'npm-explicit-deps'
 };
 
 
@@ -90,13 +90,16 @@ npi
 
   // fix package.json file
   .pipe(updatePkg('package.json', function () {
+    var explicitBin = require('os').platform().match(/win/)
+      ? ".\\node_modules\\.bin\\npm-explicit-deps.cmd" // omg it s so shit bloated.
+      : "node_modules/.bin/npm-explicit-deps";
     return {
       scripts          : {
         "patch": "npm version patch -m \"patch %s\"",
-        "minor": "npm version minor -m \"patch %s\"",
-        "major": "npm version major -m \"patch %s\"",
-        "preversion": "echo \"npm test: undefined\" && node node_modules/.bin/npm-explicit-deps -y",
-        "version": "echo \"npm run build: undefined\"",
+        "minor": "npm version minor -m \"minor %s\"",
+        "major": "npm version major -m \"major %s\"",
+        "preversion": "echo \"npm test: not defined\" && "+explicitBin+" -y",
+        "version": "echo \"npm run build: not defined\"",
         "postversion": "git push && git push --tags"
       },
       licence         : templateVars.licence,
