@@ -36,7 +36,7 @@ var tplPath       = path.join(__dirname, 'template');
 var templateVars  = {
   name            : path.basename(process.cwd()),
   description     : "Description of the module.",
-  licence         : 'WTF',
+  license         : 'WTF',
   keywords        : '',
   ignored         : ignored,
   dependencies    : argv['_'].join(' ') + ' ',
@@ -59,8 +59,8 @@ npi
     templateVars, 'description'))
   .pipe(input('Input the module\'s keywords :',
     templateVars, 'keywords'))
-  .pipe(choose('Please choose a licence :',
-    templateVars, 'licence'))
+  .pipe(choose('Please choose a license :',
+    templateVars, 'license'))
   .pipe( !argv['_'].length
     ? input('Input the module\'s dependencies :',
     templateVars, 'dependencies')
@@ -99,7 +99,7 @@ npi
         "version": "echo \"npm run build: not defined\"",
         "postversion": "git push && git push --tags"
       },
-      licence         : templateVars.licence,
+      license         : templateVars.license,
       description     : templateVars.description,
       keywords        : templateVars.keywords.split(/\s/)
     };
