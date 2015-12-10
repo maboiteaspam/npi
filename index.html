@@ -44,6 +44,7 @@
 
 <pre><code>npi [--verbose|-v] [-- module1 module2]
 npi [module1 module2]
+npi --explicit # this is internal for windows support, don t worry much.
 </code></pre>
 
 <h2>
@@ -71,8 +72,44 @@ npi [module1 module2]
 
 <p>Please check more about it at <a href="https://github.com/rvagg/npm-explicit-deps">https://github.com/rvagg/npm-explicit-deps</a></p>
 
+<p>Read also about <code>npm version</code> <a href="https://docs.npmjs.com/cli/version">https://docs.npmjs.com/cli/version</a></p>
+
+<h3>
+<a id="complete-your-workflow" class="anchor" href="#complete-your-workflow" aria-hidden="true"><span class="octicon octicon-link"></span></a>Complete your workflow</h3>
+
+<p>To go further you can check about those repo</p>
+
+<ul>
+<li><a href="https://github.com/commitizen/cz-cli">https://github.com/commitizen/cz-cli</a></li>
+<li><a href="https://github.com/bahmutov/npm-module-checklist">https://github.com/bahmutov/npm-module-checklist</a></li>
+</ul>
+
+<p>There s also plenty of grunt, gulp and other modules if you like.</p>
+
 <h2>
-<a id="flow" class="anchor" href="#flow" aria-hidden="true"><span class="octicon octicon-link"></span></a>Flow</h2>
+<a id="operations-flow" class="anchor" href="#operations-flow" aria-hidden="true"><span class="octicon octicon-link"></span></a>Operations Flow</h2>
+
+<h4>
+<a id="for-humans-only" class="anchor" href="#for-humans-only" aria-hidden="true"><span class="octicon octicon-link"></span></a>For humans only,</h4>
+
+<ul>
+<li>npm init --yes</li>
+<li>ask you about module description</li>
+<li>ask you about module keywords</li>
+<li>ask you about module licence</li>
+<li>ask you about module dependencies, unless provided.</li>
+<li>ask you about module dev-dependencies</li>
+<li>generate your files</li>
+<li>npm i [your dependencies]</li>
+<li>npm i [your dev-dependencies]</li>
+<li>fix various things in the <code>package.json</code> file, for lazy people</li>
+<li>git init</li>
+<li>git add </li>
+<li>git commit -m 'npi:version'</li>
+</ul>
+
+<h4>
+<a id="everyone-else" class="anchor" href="#everyone-else" aria-hidden="true"><span class="octicon octicon-link"></span></a>Everyone else,</h4>
 
 <div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> ignored <span class="pl-k">=</span> [
   <span class="pl-s"><span class="pl-pds">'</span>node_modules/<span class="pl-pds">'</span></span>,
@@ -130,6 +167,14 @@ npi
   <span class="pl-c">// fix package.json file</span>
   .<span class="pl-en">pipe</span>(<span class="pl-en">updatePkg</span>(<span class="pl-s"><span class="pl-pds">'</span>package.json<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> () {
     <span class="pl-k">return</span> {
+      scripts          <span class="pl-k">:</span> {
+        <span class="pl-s"><span class="pl-pds">"</span>patch<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>npm version patch -m <span class="pl-cce">\"</span>patch %s<span class="pl-cce">\"</span><span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>minor<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>npm version minor -m <span class="pl-cce">\"</span>patch %s<span class="pl-cce">\"</span><span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>major<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>npm version major -m <span class="pl-cce">\"</span>patch %s<span class="pl-cce">\"</span><span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>preversion<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>echo <span class="pl-cce">\"</span>npm test: undefined<span class="pl-cce">\"</span> &amp;&amp; node node_modules/.bin/npm-explicit-deps -y<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>version<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>echo <span class="pl-cce">\"</span>npm run build: undefined<span class="pl-cce">\"</span><span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>postversion<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>git push &amp;&amp; git push --tags<span class="pl-pds">"</span></span>
+      },
       licence         <span class="pl-k">:</span> <span class="pl-smi">templateVars</span>.<span class="pl-smi">licence</span>,
       description     <span class="pl-k">:</span> <span class="pl-smi">templateVars</span>.<span class="pl-c1">description</span>,
       keywords        <span class="pl-k">:</span> <span class="pl-smi">templateVars</span>.<span class="pl-smi">keywords</span>.<span class="pl-c1">split</span>(<span class="pl-sr"><span class="pl-pds">/</span><span class="pl-c1">\s</span><span class="pl-pds">/</span></span>)
@@ -147,9 +192,27 @@ npi
 ;</pre></div>
 
 <h2>
-<a id="pipe" class="anchor" href="#pipe" aria-hidden="true"><span class="octicon octicon-link"></span></a>Pipe</h2>
+<a id="about-the-code" class="anchor" href="#about-the-code" aria-hidden="true"><span class="octicon octicon-link"></span></a>About the code</h2>
 
-<p>I don t know if that helps :D</p>
+<p>TLDR: It use a main stream <code>npi</code> on which transforms are piped to.</p>
+
+<p>They execute in sequence, time management is totally left to the underlying pipe system.</p>
+
+<p>To communicate with the user along the commands, <code>npi</code> will bubble events to the <code>source</code> stream.</p>
+
+<p><code>msgListener</code> a dedicated stream is setup to listen <code>npi</code> stream  <code>message event</code>s.</p>
+
+<p>It then route chunks to specific transforms which are responsible to display an output given the type of message.</p>
+
+<p>The type of events you may encounter are</p>
+
+<p>When a file is created : <code>{message: 'file', body:'path'}</code></p>
+
+<p>When a process spawns : <code>{message: 'spawn', body:child_process}</code></p>
+
+<p>When a process has spawned (child_process.close event) : <code>{message: 'spawned', body:child_process}</code></p>
+
+<p>May this drawing you to jump in the code,</p>
 
 <div class="highlight highlight-source-js"><pre>       <span class="pl-c1">process</span>
 <span class="pl-k">-</span>▶<span class="pl-k">-</span>stdin<span class="pl-k">-</span>▶<span class="pl-k">|</span>                       (<span class="pl-c1">1</span>)
