@@ -40,7 +40,7 @@ var templateVars  = {
   keywords        : '',
   ignored         : ignored,
   dependencies    : argv['_'].join(' ') + ' ',
-  devDependencies : 'npm-explicit-deps'
+  devDependencies : ''
 };
 
 
@@ -90,15 +90,12 @@ npi
 
   // fix package.json file
   .pipe(updatePkg('package.json', function () {
-    var explicitBin = require('os').platform().match(/win/)
-      ? ".\\node_modules\\.bin\\npm-explicit-deps.cmd" // omg it s so shit bloated.
-      : "node_modules/.bin/npm-explicit-deps";
     return {
       scripts          : {
         "patch": "npm version patch -m \"patch %s\"",
         "minor": "npm version minor -m \"minor %s\"",
         "major": "npm version major -m \"major %s\"",
-        "preversion": "echo \"npm test: not defined\" && "+explicitBin+" -y",
+        "preversion": "echo \"npm test: not defined\" && npi --explicit",
         "version": "echo \"npm run build: not defined\"",
         "postversion": "git push && git push --tags"
       },
@@ -122,8 +119,20 @@ npi.on('error', function (err) {
   console.error('GOT ERROR %j', err);
 });
 
+var explicit = messageRouter('explicit');
+explicit
+  .pipe(spawn('node', [__dirname+'/node_modules/npm-explicit-deps/bin/npm-explicit-deps.js', '-y'],
+    {stdio: 'inherit'}))
 
-var msgListener = eventStream('message', npi);
+
+
+var main = streamMsger('main');
+main.pipe(npi);
+main.pipe(explicit);
+
+
+
+var msgListener = eventStream('message', main);
 msgListener
   .pipe(messageRouter('file'))
   .pipe(extract('body', function (file) {
@@ -140,7 +149,8 @@ msgListener
   .pipe(pipeSpawned());
 
 
-npi.write({
-  message : 'npi',
+
+main.write({
+  message : argv.explicit?'explicit':'npi',
   body    : argv
 });

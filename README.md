@@ -10,6 +10,7 @@ Node Project Init. A bit more than `npm init -y`.
 
     npi [--verbose|-v] [-- module1 module2]
     npi [module1 module2]
+    npi --explicit # this is internal for windows support, don t worry much.
 
 ## Expected result
 
@@ -39,13 +40,6 @@ The reason of this workflow is to enforce a better usage of `semver`.
 Please check more about it at https://github.com/rvagg/npm-explicit-deps
 
 Read also about `npm version` https://docs.npmjs.com/cli/version
-
-##### windows
-
-More or less, you can work on windows with it, thanks to https://github.com/featurist/spawn-cmd.
-Please care that you may encounter problems wth the `preversion` field if you work on both windows / linux.
-
-This need a PR.
 
 ### Complete your workflow
 
