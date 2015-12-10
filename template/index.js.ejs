@@ -1,7 +1,7 @@
 <% dependencies.split(/\s/).forEach(function (module) {
   if (module) {
     module = module.match(/([^/]+)$/)[1]
-    module.replace(/[-]/g, '_');
+    module = module.replace(/[-]/g, '_');
     print("var "+module+" = require('"+module+"')\n")
   }
 }) %>
