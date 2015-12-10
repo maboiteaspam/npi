@@ -42,11 +42,10 @@ Read also about `npm version` https://docs.npmjs.com/cli/version
 
 ##### windows
 
-So far, it is expected to __fail__, need to check about
+More or less, you can work on windows with it, thanks to https://github.com/featurist/spawn-cmd.
+Please care that you may encounter problems wth the `preversion` field if you work on both windows / linux.
 
-- https://github.com/ForbesLindesay/win-spawn
-- https://github.com/MarcDiethelm/superspawn
-- https://github.com/featurist/spawn-cmd
+This need a PR.
 
 ### Complete your workflow
 
