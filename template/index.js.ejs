@@ -1,15 +1,15 @@
 <% dependencies.split(/\s/).forEach(function (module) {
   if (module) {
-    module = module.match(/([^/]+)$/)[1]
-    module = module.replace(/[-]/g, '_');
-    print("var "+module+" = require('"+module+"')\n")
+    var jsModule = module.match(/([^/]+)$/)[1]
+    jsModule = jsModule.replace(/[-]/g, '_');
+    print("var "+jsModule+" = require('"+module+"')\n")
   }
 }) %>
 <% devDependencies.split(/\s/).forEach(function (module) {
   if (module) {
-    module = module.match(/([^/]+)$/)[1]
-    module = module.replace(/[-]/g, '_');
-    print("var "+module+" = require('"+module+"')\n")
+    var jsModule = module.match(/([^/]+)$/)[1]
+    jsModule = jsModule.replace(/[-]/g, '_');
+    print("var "+jsModule+" = require('"+module+"')\n")
   }
 }) %>
 
@@ -17,4 +17,4 @@ var yourModule = function () {
 
 }
 
-modules.exports = yourModule;
+module.exports = yourModule;

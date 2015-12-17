@@ -1,6 +1,6 @@
 {
   "name": "npi",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Node Project Init",
   "bin": {
     "npi": "./index.js"
@@ -30,6 +30,7 @@
     "lodash": ">=3.10.1 <4.0.0-0",
     "minimist": ">=1.2.0 <2.0.0-0",
     "npm-explicit-deps": ">=1.0.2 <2.0.0-0",
+    "spawn-cmd": "0.0.2",
     "stream-message-router": "maboiteaspam/stream-message-router",
     "stream-messenger": "maboiteaspam/stream-messenger"
   },
