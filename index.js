@@ -120,13 +120,14 @@ npi
   .pipe(updatePkg('package.json', function () {
 
     return {
-      scripts          : {
-        "patch": "npm version patch -m \"patch %s\"",
-        "minor": "npm version minor -m \"minor %s\"",
-        "major": "npm version major -m \"major %s\"",
-        "preversion": "echo \"npm test: not defined\" && npi --explicit",
-        "version": "echo \"npm run build: not defined\"",
-        "postversion": "git push && git push --tags"
+      scripts : {
+        "dcheck"      : "npm outdated --depth=0",
+        "patch"       : "npm version patch -m \"patch %s\"",
+        "minor"       : "npm version minor -m \"minor %s\"",
+        "major"       : "npm version major -m \"major %s\"",
+        "preversion"  : "echo \"npm test: not defined\" && npi --explicit",
+        "version"     : "echo \"npm run build: not defined\"",
+        "postversion" : "git push && git push --tags"
       },
       bin             : templateVars.bin,
       license         : templateVars.license,
