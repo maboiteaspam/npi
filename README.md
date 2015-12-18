@@ -92,11 +92,11 @@ There s also plenty of grunt, gulp and other modules if you like.
 #### For humans only,
 
 - npm init --yes
-- ask you about module description
-- ask you about module keywords
-- ask you about module licence
-- ask you about module dependencies, unless provided.
-- ask you about module dev-dependencies
+- ask you about module `description`
+- ask you about module `keywords` (space delimited)
+- ask you to choose a `licence`
+- ask you about module `dependencies`, unless provided previously (space delimited)
+- ask you about module `dev-dependencies` (space delimited)
 - generate your files
 - npm i [your dependencies]
 - npm i [your dev-dependencies]
@@ -122,8 +122,7 @@ var templateVars = {
 
 npi
   // npm init
-  .pipe(spawn('npm', ['init', '--yes'],
-    {stdio: 'inherit'}))
+  .pipe(spawn('npm', ['init', '--yes']))
   .pipe(bubble('message',
     {message: 'file', 'body':'package.json'}))
 
@@ -132,8 +131,8 @@ npi
     templateVars, 'description'))
   .pipe(input('Input the module\'s keywords :',
     templateVars, 'keywords'))
-  .pipe(choose('Please choose a licence :',
-    templateVars, 'licence'))
+  .pipe(choose('Please choose a license :',
+    templateVars, 'license'))
   .pipe( !argv['_'].length
     ? input('Input the module\'s dependencies :',
     templateVars, 'dependencies')
@@ -146,47 +145,48 @@ npi
   .pipe(genTemplate(tplPath, 'playground.js', templateVars))
   .pipe(genTemplate(tplPath, 'index.js'     , templateVars))
   .pipe(genTemplate(tplPath, '.gitignore'   , templateVars))
+  .pipe( argv.b
+    ? genTemplate(tplPath,  'bin.js'        , templateVars)
+    : streamMsger('skip') )
 
   // npm module install
   .pipe(spawn('npm', function (){
-    var modules = templateVars.dependencies
-      .replace(/^\s+/, '').replace(/\s+$/, '').split(/\s/);
+    var modules = trim(templateVars.dependencies).split(/\s/);
     if (!modules.length || !modules[0].length) return false;
     return ['i'].concat(modules).concat('--save');
-  }, {stdio: 'inherit'}))
+  }))
   .pipe(spawn('npm', function (){
-    var modules = templateVars.devDependencies
-      .replace(/^\s+/, '').replace(/\s+$/, '').split(/\s/);
+    var modules = trim(templateVars.devDependencies).split(/\s/);
     if (!modules.length || !modules[0].length) return false;
     return ['i'].concat(modules).concat('--save-dev');
-  }, {stdio: 'inherit'}))
+  }))
 
   // fix package.json file
   .pipe(updatePkg('package.json', function () {
+
     return {
-      scripts          : {
-        "patch": "npm version patch -m \"patch %s\"",
-        "minor": "npm version minor -m \"patch %s\"",
-        "major": "npm version major -m \"patch %s\"",
-        "preversion": "echo \"npm test: undefined\" && node node_modules/.bin/npm-explicit-deps -y",
-        "version": "echo \"npm run build: undefined\"",
-        "postversion": "git push && git push --tags"
+      scripts : {
+        "dcheck"      : "npm outdated --depth=0",
+        "patch"       : "npm version patch -m \"patch %s\"",
+        "minor"       : "npm version minor -m \"minor %s\"",
+        "major"       : "npm version major -m \"major %s\"",
+        "preversion"  : "echo \"npm test: not defined\" && npi --explicit",
+        "version"     : "echo \"npm run build: not defined\"",
+        "postversion" : "git push && git push --tags"
       },
-      licence         : templateVars.licence,
+      bin             : templateVars.bin,
+      license         : templateVars.license,
       description     : templateVars.description,
       keywords        : templateVars.keywords.split(/\s/)
     };
   }))
 
   // git init, add, commit
-  .pipe(spawn('git', ['init'],
-    {stdio: 'inherit'}))
+  .pipe(spawn('git', ['init']))
   .pipe(spawn('git', function (){
     return ['add'].concat(files)
-  }, {stdio: 'inherit'}))
-  .pipe(spawn('git', ['commit', '-m', 'npi:'+pkg.version],
-    {stdio: 'inherit'}))
-;
+  }))
+  .pipe(spawn('git', ['commit', '-m', 'npi:'+pkg.version]))
 ```
 
 ## About the code
