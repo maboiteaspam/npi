@@ -1,5 +1,28 @@
 #!/usr/bin/env node
 
+function usage () {/*
+
+ npi to init a node project.
+
+ Usage
+ npi [module1 module2]
+ npi [opts] -- [module1 module2]
+
+ Options
+ -v             verbose
+ -h             show help
+ -b             add bin.js
+ --explicit     invoke rvagg/node-explicit --yes.
+
+ Examples
+ npi debug minimist multiline
+ npi -b -- debug minimist multiline
+ npi -v -- debug minimist multiline
+
+ npi --explicit
+ npi -h
+ */}
+
 var argv = require('minimist')(process.argv.slice(2));
 
 if (argv.verbose || argv.v) process.env['DEBUG'] = [
@@ -33,24 +56,26 @@ var ignored = [
 ];
 
 var tplPath       = path.join(__dirname, 'template');
+var name = path.basename(process.cwd());
 var templateVars  = {
-  name            : path.basename(process.cwd()),
+  name            : name,
   description     : "Description of the module.",
   license         : 'WTF',
   keywords        : '',
   ignored         : ignored,
+  bin             : {},
   dependencies    : argv['_'].join(' ') + ' ',
   devDependencies : ''
 };
 
+if (argv.b) templateVars.bin[name] = './bin.js'
 
 console.log('npi %s', pkg.version)
 
 var npi = messageRouter('npi');
 npi
   // npm init
-  .pipe(spawn('npm', ['init', '--yes'],
-    {stdio: 'inherit'}))
+  .pipe(spawn('npm', ['init', '--yes']))
   .pipe(bubble('message',
     {message: 'file', 'body':'package.json'}))
 
@@ -73,6 +98,9 @@ npi
   .pipe(genTemplate(tplPath, 'playground.js', templateVars))
   .pipe(genTemplate(tplPath, 'index.js'     , templateVars))
   .pipe(genTemplate(tplPath, '.gitignore'   , templateVars))
+  .pipe( argv.b
+    ? genTemplate(tplPath,  'bin.js'        , templateVars)
+    : streamMsger('skip') )
 
   // npm module install
   .pipe(spawn('npm', function (){
@@ -80,16 +108,17 @@ npi
       .replace(/^\s+/, '').replace(/\s+$/, '').split(/\s/);
     if (!modules.length || !modules[0].length) return false;
     return ['i'].concat(modules).concat('--save');
-  }, {stdio: 'inherit'}))
+  }))
   .pipe(spawn('npm', function (){
     var modules = templateVars.devDependencies
       .replace(/^\s+/, '').replace(/\s+$/, '').split(/\s/);
     if (!modules.length || !modules[0].length) return false;
     return ['i'].concat(modules).concat('--save-dev');
-  }, {stdio: 'inherit'}))
+  }))
 
   // fix package.json file
   .pipe(updatePkg('package.json', function () {
+
     return {
       scripts          : {
         "patch": "npm version patch -m \"patch %s\"",
@@ -99,6 +128,7 @@ npi
         "version": "echo \"npm run build: not defined\"",
         "postversion": "git push && git push --tags"
       },
+      bin             : templateVars.bin,
       license         : templateVars.license,
       description     : templateVars.description,
       keywords        : templateVars.keywords.split(/\s/)
@@ -106,13 +136,11 @@ npi
   }))
 
   // git init, add, commit
-  .pipe(spawn('git', ['init'],
-    {stdio: 'inherit'}))
+  .pipe(spawn('git', ['init']))
   .pipe(spawn('git', function (){
     return ['add'].concat(files)
-  }, {stdio: 'inherit'}))
-  .pipe(spawn('git', ['commit', '-m', 'npi:'+pkg.version],
-    {stdio: 'inherit'}))
+  }))
+  .pipe(spawn('git', ['commit', '-m', 'npi:'+pkg.version]))
 ;
 
 npi.on('error', function (err) {
@@ -121,8 +149,7 @@ npi.on('error', function (err) {
 
 var explicit = messageRouter('explicit');
 explicit
-  .pipe(spawn('node', [__dirname+'/node_modules/npm-explicit-deps/bin/npm-explicit-deps.js', '-y'],
-    {stdio: 'inherit'}))
+  .pipe(spawn('node', [__dirname+'/node_modules/npm-explicit-deps/bin/npm-explicit-deps.js', '-y']))
 
 
 
