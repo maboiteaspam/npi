@@ -61,6 +61,13 @@ To increase __minor__ number of your package revision.
 
 To increase __major__ number of your package revision.
 
+#### npm run dcheck
+
+Check your dependencies status,
+upgrade tham if they are outdated.
+under the hood, its `npm outdated --depth=0`.
+
+__________
 
 The reason of this workflow is to enforce a better usage of `semver`.
 
@@ -68,9 +75,8 @@ Please check more about it at https://github.com/rvagg/npm-explicit-deps
 
 Read also about `npm version` https://docs.npmjs.com/cli/version
 
-There a also a command to check your dependencies status and know which needs to be updated to latest,
-
-__npm run dcheck__ : Which runs `npm outdated --depth=0` under the hood.
+Finally, you can take advantage of `preversion` and `version` npm scripts to
+invoke build and test frameworks.
 
 ### Complete your workflow
 
