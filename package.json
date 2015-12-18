@@ -32,7 +32,8 @@
     "npm-explicit-deps": ">=1.0.2 <2.0.0-0",
     "spawn-cmd": "0.0.2",
     "stream-message-router": "maboiteaspam/stream-message-router",
-    "stream-messenger": "maboiteaspam/stream-messenger"
+    "stream-messenger": "maboiteaspam/stream-messenger",
+    "trim": "0.0.1"
   },
   "devDependencies": {},
   "repository": {

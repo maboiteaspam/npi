@@ -34,6 +34,7 @@ if (argv.verbose || argv.v) process.env['DEBUG'] = [
 require('console.md')();
 
 var path          = require('path')
+var trim          = require('trim')
 var eventStream   = require('event-stream-writer')
 var streamMsger   = require('stream-messenger')
 var messageRouter = require('stream-message-router')
@@ -104,14 +105,12 @@ npi
 
   // npm module install
   .pipe(spawn('npm', function (){
-    var modules = templateVars.dependencies
-      .replace(/^\s+/, '').replace(/\s+$/, '').split(/\s/);
+    var modules = trim(templateVars.dependencies).split(/\s/);
     if (!modules.length || !modules[0].length) return false;
     return ['i'].concat(modules).concat('--save');
   }))
   .pipe(spawn('npm', function (){
-    var modules = templateVars.devDependencies
-      .replace(/^\s+/, '').replace(/\s+$/, '').split(/\s/);
+    var modules = trim(templateVars.devDependencies).split(/\s/);
     if (!modules.length || !modules[0].length) return false;
     return ['i'].concat(modules).concat('--save-dev');
   }))
