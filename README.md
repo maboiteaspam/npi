@@ -68,6 +68,10 @@ Please check more about it at https://github.com/rvagg/npm-explicit-deps
 
 Read also about `npm version` https://docs.npmjs.com/cli/version
 
+There a also a command to check your dependencies status and know which needs to be updated to latest,
+
+__npm run dcheck__ : Which runs `npm outdated --depth=0` under the hood.
+
 ### Complete your workflow
 
 To go further you can check about those repo
