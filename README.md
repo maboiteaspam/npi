@@ -8,25 +8,27 @@ Node Project Init. A bit more than `npm init -y`.
 
 ## Usage
 
-      npi to init a node project.
+    npi
 
-      Usage
-         npi [module1 module2]
-         npi [opts] -- [module1 module2]
+     Init a node project.
 
-      Options
-         -v             verbose
-         -h             show help
-         -b             add bin.js
-         --explicit     invoke rvagg/node-explicit --yes.
+     Usage
+       npi [module1 module2]
+       npi [opts] -- [module1 module2]
+
+     Options
+       -v             verbose
+       -h             show help
+       -b             add bin.js
+       --explicit     invoke rvagg/node-explicit --yes.
 
      Examples
-         npi debug minimist multiline
-         npi -b -- debug minimist multiline
-         npi -v -- debug minimist multiline
+       npi debug minimist multiline
+       npi -b -- debug minimist multiline
+       npi -v -- debug minimist multiline
 
-         npi --explicit
-         npi -h
+       npi --explicit
+       npi -h
 
 ## Expected result
 

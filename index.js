@@ -1,26 +1,27 @@
 #!/usr/bin/env node
 
 function usage () {/*
+npi
 
- npi to init a node project.
+ Init a node project.
 
  Usage
- npi [module1 module2]
- npi [opts] -- [module1 module2]
+   npi [module1 module2]
+   npi [opts] -- [module1 module2]
 
  Options
- -v             verbose
- -h             show help
- -b             add bin.js
- --explicit     invoke rvagg/node-explicit --yes.
+   -v             verbose
+   -h             show help
+   -b             add bin.js
+   --explicit     invoke rvagg/node-explicit --yes.
 
  Examples
- npi debug minimist multiline
- npi -b -- debug minimist multiline
- npi -v -- debug minimist multiline
+   npi debug minimist multiline
+   npi -b -- debug minimist multiline
+   npi -v -- debug minimist multiline
 
- npi --explicit
- npi -h
+   npi --explicit
+   npi -h
  */}
 
 var argv = require('minimist')(process.argv.slice(2));
@@ -35,6 +36,7 @@ require('console.md')();
 
 var path          = require('path')
 var trim          = require('trim')
+var multiline     = require('multiline')
 var eventStream   = require('event-stream-writer')
 var streamMsger   = require('stream-messenger')
 var messageRouter = require('stream-message-router')
@@ -47,6 +49,8 @@ var extract       = require('./lib/extract')
 var genTemplate   = require('./lib/generatetemplate')
 var pipeSpawned   = require('./lib/pipespawned')
 var updatePkg     = require('./lib/updatepackage')
+
+if (argv.h) return console.log(multiline(usage))
 
 
 var pkg     = require('./package.json')
