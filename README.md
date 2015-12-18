@@ -8,9 +8,25 @@ Node Project Init. A bit more than `npm init -y`.
 
 ## Usage
 
-    npi [--verbose|-v] [-- module1 module2]
-    npi [module1 module2]
-    npi --explicit # this is internal for windows support, don t worry much.
+      npi to init a node project.
+
+      Usage
+         npi [module1 module2]
+         npi [opts] -- [module1 module2]
+
+      Options
+         -v             verbose
+         -h             show help
+         -b             add bin.js
+         --explicit     invoke rvagg/node-explicit --yes.
+
+     Examples
+         npi debug minimist multiline
+         npi -b -- debug minimist multiline
+         npi -v -- debug minimist multiline
+
+         npi --explicit
+         npi -h
 
 ## Expected result
 
@@ -25,14 +41,25 @@ A minimal bunch of files to get on work, cooked just for you.
  - README.md
 ```
 
-`package.json` is updated to add `description`, `licence`, `keyword` __and__ a minimal workflow to tag,
+Following `package.json` fields are updated with your input,
 
+- description
+- licence
+- keyword
 
-__npm run patch__ : To increase patch number of your package.
+The resulting `package.json` provide a set of script,
 
-__npm run minor__ : To increase minor number of your package.
+#### npm run patch
 
-__npm run major__ : To increase major ... you got it.
+To increase __patch__ number of your package revision.
+
+#### npm run minor
+
+To increase __minor__ number of your package revision.
+
+#### npm run major
+
+To increase __major__ number of your package revision.
 
 
 The reason of this workflow is to enforce a better usage of `semver`.
