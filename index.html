@@ -42,9 +42,25 @@
 <h2>
 <a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
 
-<pre><code>npi [--verbose|-v] [-- module1 module2]
-npi [module1 module2]
-npi --explicit # this is internal for windows support, don t worry much.
+<pre><code>  npi to init a node project.
+
+  Usage
+     npi [module1 module2]
+     npi [opts] -- [module1 module2]
+
+  Options
+     -v             verbose
+     -h             show help
+     -b             add bin.js
+     --explicit     invoke rvagg/node-explicit --yes.
+
+ Examples
+     npi debug minimist multiline
+     npi -b -- debug minimist multiline
+     npi -v -- debug minimist multiline
+
+     npi --explicit
+     npi -h
 </code></pre>
 
 <h2>
@@ -60,19 +76,48 @@ npi --explicit # this is internal for windows support, don t worry much.
  - README.md
 </code></pre>
 
-<p><code>package.json</code> is updated to add <code>description</code>, <code>licence</code>, <code>keyword</code> <strong>and</strong> a minimal workflow to tag,</p>
+<p>Following <code>package.json</code> fields are updated with your input,</p>
 
-<p><strong>npm run patch</strong> : To increase patch number of your package.</p>
+<ul>
+<li>description</li>
+<li>licence</li>
+<li>keyword</li>
+</ul>
 
-<p><strong>npm run minor</strong> : To increase minor number of your package.</p>
+<p>The resulting <code>package.json</code> provide a set of script,</p>
 
-<p><strong>npm run major</strong> : To increase major ... you got it.</p>
+<h4>
+<a id="npm-run-patch" class="anchor" href="#npm-run-patch" aria-hidden="true"><span class="octicon octicon-link"></span></a>npm run patch</h4>
+
+<p>To increase <strong>patch</strong> number of your package revision.</p>
+
+<h4>
+<a id="npm-run-minor" class="anchor" href="#npm-run-minor" aria-hidden="true"><span class="octicon octicon-link"></span></a>npm run minor</h4>
+
+<p>To increase <strong>minor</strong> number of your package revision.</p>
+
+<h4>
+<a id="npm-run-major" class="anchor" href="#npm-run-major" aria-hidden="true"><span class="octicon octicon-link"></span></a>npm run major</h4>
+
+<p>To increase <strong>major</strong> number of your package revision.</p>
+
+<h4>
+<a id="npm-run-dcheck" class="anchor" href="#npm-run-dcheck" aria-hidden="true"><span class="octicon octicon-link"></span></a>npm run dcheck</h4>
+
+<p>Check your dependencies status,
+upgrade tham if they are outdated.
+under the hood, its <code>npm outdated --depth=0</code>.</p>
+
+<hr>
 
 <p>The reason of this workflow is to enforce a better usage of <code>semver</code>.</p>
 
 <p>Please check more about it at <a href="https://github.com/rvagg/npm-explicit-deps">https://github.com/rvagg/npm-explicit-deps</a></p>
 
 <p>Read also about <code>npm version</code> <a href="https://docs.npmjs.com/cli/version">https://docs.npmjs.com/cli/version</a></p>
+
+<p>Finally, you can take advantage of <code>preversion</code> and <code>version</code> npm scripts to
+invoke build and test frameworks.</p>
 
 <h3>
 <a id="complete-your-workflow" class="anchor" href="#complete-your-workflow" aria-hidden="true"><span class="octicon octicon-link"></span></a>Complete your workflow</h3>
@@ -94,11 +139,13 @@ npi --explicit # this is internal for windows support, don t worry much.
 
 <ul>
 <li>npm init --yes</li>
-<li>ask you about module description</li>
-<li>ask you about module keywords</li>
-<li>ask you about module licence</li>
-<li>ask you about module dependencies, unless provided.</li>
-<li>ask you about module dev-dependencies</li>
+<li>ask you about module <code>description</code>
+</li>
+<li>ask you about module <code>keywords</code> (space delimited)</li>
+<li>ask you to choose a <code>licence</code>
+</li>
+<li>ask you about module <code>dependencies</code>, unless provided previously (space delimited)</li>
+<li>ask you about module <code>dev-dependencies</code> (space delimited)</li>
 <li>generate your files</li>
 <li>npm i [your dependencies]</li>
 <li>npm i [your dev-dependencies]</li>
@@ -125,8 +172,7 @@ npi --explicit # this is internal for windows support, don t worry much.
 
 npi
   <span class="pl-c">// npm init</span>
-  .<span class="pl-en">pipe</span>(<span class="pl-en">spawn</span>(<span class="pl-s"><span class="pl-pds">'</span>npm<span class="pl-pds">'</span></span>, [<span class="pl-s"><span class="pl-pds">'</span>init<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>--yes<span class="pl-pds">'</span></span>],
-    {stdio<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>inherit<span class="pl-pds">'</span></span>}))
+  .<span class="pl-en">pipe</span>(<span class="pl-en">spawn</span>(<span class="pl-s"><span class="pl-pds">'</span>npm<span class="pl-pds">'</span></span>, [<span class="pl-s"><span class="pl-pds">'</span>init<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>--yes<span class="pl-pds">'</span></span>]))
   .<span class="pl-en">pipe</span>(<span class="pl-en">bubble</span>(<span class="pl-s"><span class="pl-pds">'</span>message<span class="pl-pds">'</span></span>,
     {message<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>file<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>body<span class="pl-pds">'</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">'</span>package.json<span class="pl-pds">'</span></span>}))
 
@@ -135,8 +181,8 @@ npi
     templateVars, <span class="pl-s"><span class="pl-pds">'</span>description<span class="pl-pds">'</span></span>))
   .<span class="pl-en">pipe</span>(<span class="pl-en">input</span>(<span class="pl-s"><span class="pl-pds">'</span>Input the module<span class="pl-cce">\'</span>s keywords :<span class="pl-pds">'</span></span>,
     templateVars, <span class="pl-s"><span class="pl-pds">'</span>keywords<span class="pl-pds">'</span></span>))
-  .<span class="pl-en">pipe</span>(<span class="pl-en">choose</span>(<span class="pl-s"><span class="pl-pds">'</span>Please choose a licence :<span class="pl-pds">'</span></span>,
-    templateVars, <span class="pl-s"><span class="pl-pds">'</span>licence<span class="pl-pds">'</span></span>))
+  .<span class="pl-en">pipe</span>(<span class="pl-en">choose</span>(<span class="pl-s"><span class="pl-pds">'</span>Please choose a license :<span class="pl-pds">'</span></span>,
+    templateVars, <span class="pl-s"><span class="pl-pds">'</span>license<span class="pl-pds">'</span></span>))
   .<span class="pl-en">pipe</span>( <span class="pl-k">!</span>argv[<span class="pl-s"><span class="pl-pds">'</span>_<span class="pl-pds">'</span></span>].<span class="pl-c1">length</span>
     <span class="pl-k">?</span> <span class="pl-en">input</span>(<span class="pl-s"><span class="pl-pds">'</span>Input the module<span class="pl-cce">\'</span>s dependencies :<span class="pl-pds">'</span></span>,
     templateVars, <span class="pl-s"><span class="pl-pds">'</span>dependencies<span class="pl-pds">'</span></span>)
@@ -149,47 +195,48 @@ npi
   .<span class="pl-en">pipe</span>(<span class="pl-en">genTemplate</span>(tplPath, <span class="pl-s"><span class="pl-pds">'</span>playground.js<span class="pl-pds">'</span></span>, templateVars))
   .<span class="pl-en">pipe</span>(<span class="pl-en">genTemplate</span>(tplPath, <span class="pl-s"><span class="pl-pds">'</span>index.js<span class="pl-pds">'</span></span>     , templateVars))
   .<span class="pl-en">pipe</span>(<span class="pl-en">genTemplate</span>(tplPath, <span class="pl-s"><span class="pl-pds">'</span>.gitignore<span class="pl-pds">'</span></span>   , templateVars))
+  .<span class="pl-en">pipe</span>( <span class="pl-smi">argv</span>.<span class="pl-smi">b</span>
+    <span class="pl-k">?</span> <span class="pl-en">genTemplate</span>(tplPath,  <span class="pl-s"><span class="pl-pds">'</span>bin.js<span class="pl-pds">'</span></span>        , templateVars)
+    <span class="pl-k">:</span> <span class="pl-en">streamMsger</span>(<span class="pl-s"><span class="pl-pds">'</span>skip<span class="pl-pds">'</span></span>) )
 
   <span class="pl-c">// npm module install</span>
   .<span class="pl-en">pipe</span>(<span class="pl-en">spawn</span>(<span class="pl-s"><span class="pl-pds">'</span>npm<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> (){
-    <span class="pl-k">var</span> modules <span class="pl-k">=</span> <span class="pl-smi">templateVars</span>.<span class="pl-smi">dependencies</span>
-      .<span class="pl-c1">replace</span>(<span class="pl-sr"><span class="pl-pds">/</span><span class="pl-k">^</span><span class="pl-c1">\s</span><span class="pl-k">+</span><span class="pl-pds">/</span></span>, <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>).<span class="pl-c1">replace</span>(<span class="pl-sr"><span class="pl-pds">/</span><span class="pl-c1">\s</span><span class="pl-k">+</span><span class="pl-k">$</span><span class="pl-pds">/</span></span>, <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>).<span class="pl-c1">split</span>(<span class="pl-sr"><span class="pl-pds">/</span><span class="pl-c1">\s</span><span class="pl-pds">/</span></span>);
+    <span class="pl-k">var</span> modules <span class="pl-k">=</span> <span class="pl-en">trim</span>(<span class="pl-smi">templateVars</span>.<span class="pl-smi">dependencies</span>).<span class="pl-c1">split</span>(<span class="pl-sr"><span class="pl-pds">/</span><span class="pl-c1">\s</span><span class="pl-pds">/</span></span>);
     <span class="pl-k">if</span> (<span class="pl-k">!</span><span class="pl-smi">modules</span>.<span class="pl-c1">length</span> <span class="pl-k">||</span> <span class="pl-k">!</span>modules[<span class="pl-c1">0</span>].<span class="pl-c1">length</span>) <span class="pl-k">return</span> <span class="pl-c1">false</span>;
     <span class="pl-k">return</span> [<span class="pl-s"><span class="pl-pds">'</span>i<span class="pl-pds">'</span></span>].<span class="pl-c1">concat</span>(modules).<span class="pl-c1">concat</span>(<span class="pl-s"><span class="pl-pds">'</span>--save<span class="pl-pds">'</span></span>);
-  }, {stdio<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>inherit<span class="pl-pds">'</span></span>}))
+  }))
   .<span class="pl-en">pipe</span>(<span class="pl-en">spawn</span>(<span class="pl-s"><span class="pl-pds">'</span>npm<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> (){
-    <span class="pl-k">var</span> modules <span class="pl-k">=</span> <span class="pl-smi">templateVars</span>.<span class="pl-smi">devDependencies</span>
-      .<span class="pl-c1">replace</span>(<span class="pl-sr"><span class="pl-pds">/</span><span class="pl-k">^</span><span class="pl-c1">\s</span><span class="pl-k">+</span><span class="pl-pds">/</span></span>, <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>).<span class="pl-c1">replace</span>(<span class="pl-sr"><span class="pl-pds">/</span><span class="pl-c1">\s</span><span class="pl-k">+</span><span class="pl-k">$</span><span class="pl-pds">/</span></span>, <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>).<span class="pl-c1">split</span>(<span class="pl-sr"><span class="pl-pds">/</span><span class="pl-c1">\s</span><span class="pl-pds">/</span></span>);
+    <span class="pl-k">var</span> modules <span class="pl-k">=</span> <span class="pl-en">trim</span>(<span class="pl-smi">templateVars</span>.<span class="pl-smi">devDependencies</span>).<span class="pl-c1">split</span>(<span class="pl-sr"><span class="pl-pds">/</span><span class="pl-c1">\s</span><span class="pl-pds">/</span></span>);
     <span class="pl-k">if</span> (<span class="pl-k">!</span><span class="pl-smi">modules</span>.<span class="pl-c1">length</span> <span class="pl-k">||</span> <span class="pl-k">!</span>modules[<span class="pl-c1">0</span>].<span class="pl-c1">length</span>) <span class="pl-k">return</span> <span class="pl-c1">false</span>;
     <span class="pl-k">return</span> [<span class="pl-s"><span class="pl-pds">'</span>i<span class="pl-pds">'</span></span>].<span class="pl-c1">concat</span>(modules).<span class="pl-c1">concat</span>(<span class="pl-s"><span class="pl-pds">'</span>--save-dev<span class="pl-pds">'</span></span>);
-  }, {stdio<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>inherit<span class="pl-pds">'</span></span>}))
+  }))
 
   <span class="pl-c">// fix package.json file</span>
   .<span class="pl-en">pipe</span>(<span class="pl-en">updatePkg</span>(<span class="pl-s"><span class="pl-pds">'</span>package.json<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> () {
+
     <span class="pl-k">return</span> {
-      scripts          <span class="pl-k">:</span> {
-        <span class="pl-s"><span class="pl-pds">"</span>patch<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>npm version patch -m <span class="pl-cce">\"</span>patch %s<span class="pl-cce">\"</span><span class="pl-pds">"</span></span>,
-        <span class="pl-s"><span class="pl-pds">"</span>minor<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>npm version minor -m <span class="pl-cce">\"</span>patch %s<span class="pl-cce">\"</span><span class="pl-pds">"</span></span>,
-        <span class="pl-s"><span class="pl-pds">"</span>major<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>npm version major -m <span class="pl-cce">\"</span>patch %s<span class="pl-cce">\"</span><span class="pl-pds">"</span></span>,
-        <span class="pl-s"><span class="pl-pds">"</span>preversion<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>echo <span class="pl-cce">\"</span>npm test: undefined<span class="pl-cce">\"</span> &amp;&amp; node node_modules/.bin/npm-explicit-deps -y<span class="pl-pds">"</span></span>,
-        <span class="pl-s"><span class="pl-pds">"</span>version<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>echo <span class="pl-cce">\"</span>npm run build: undefined<span class="pl-cce">\"</span><span class="pl-pds">"</span></span>,
-        <span class="pl-s"><span class="pl-pds">"</span>postversion<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>git push &amp;&amp; git push --tags<span class="pl-pds">"</span></span>
+      scripts <span class="pl-k">:</span> {
+        <span class="pl-s"><span class="pl-pds">"</span>dcheck<span class="pl-pds">"</span></span>      <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>npm outdated --depth=0<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>patch<span class="pl-pds">"</span></span>       <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>npm version patch -m <span class="pl-cce">\"</span>patch %s<span class="pl-cce">\"</span><span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>minor<span class="pl-pds">"</span></span>       <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>npm version minor -m <span class="pl-cce">\"</span>minor %s<span class="pl-cce">\"</span><span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>major<span class="pl-pds">"</span></span>       <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>npm version major -m <span class="pl-cce">\"</span>major %s<span class="pl-cce">\"</span><span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>preversion<span class="pl-pds">"</span></span>  <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>echo <span class="pl-cce">\"</span>npm test: not defined<span class="pl-cce">\"</span> &amp;&amp; npi --explicit<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>version<span class="pl-pds">"</span></span>     <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>echo <span class="pl-cce">\"</span>npm run build: not defined<span class="pl-cce">\"</span><span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>postversion<span class="pl-pds">"</span></span> <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>git push &amp;&amp; git push --tags<span class="pl-pds">"</span></span>
       },
-      licence         <span class="pl-k">:</span> <span class="pl-smi">templateVars</span>.<span class="pl-smi">licence</span>,
+      bin             <span class="pl-k">:</span> <span class="pl-smi">templateVars</span>.<span class="pl-smi">bin</span>,
+      license         <span class="pl-k">:</span> <span class="pl-smi">templateVars</span>.<span class="pl-smi">license</span>,
       description     <span class="pl-k">:</span> <span class="pl-smi">templateVars</span>.<span class="pl-c1">description</span>,
       keywords        <span class="pl-k">:</span> <span class="pl-smi">templateVars</span>.<span class="pl-smi">keywords</span>.<span class="pl-c1">split</span>(<span class="pl-sr"><span class="pl-pds">/</span><span class="pl-c1">\s</span><span class="pl-pds">/</span></span>)
     };
   }))
 
   <span class="pl-c">// git init, add, commit</span>
-  .<span class="pl-en">pipe</span>(<span class="pl-en">spawn</span>(<span class="pl-s"><span class="pl-pds">'</span>git<span class="pl-pds">'</span></span>, [<span class="pl-s"><span class="pl-pds">'</span>init<span class="pl-pds">'</span></span>],
-    {stdio<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>inherit<span class="pl-pds">'</span></span>}))
+  .<span class="pl-en">pipe</span>(<span class="pl-en">spawn</span>(<span class="pl-s"><span class="pl-pds">'</span>git<span class="pl-pds">'</span></span>, [<span class="pl-s"><span class="pl-pds">'</span>init<span class="pl-pds">'</span></span>]))
   .<span class="pl-en">pipe</span>(<span class="pl-en">spawn</span>(<span class="pl-s"><span class="pl-pds">'</span>git<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> (){
     <span class="pl-k">return</span> [<span class="pl-s"><span class="pl-pds">'</span>add<span class="pl-pds">'</span></span>].<span class="pl-c1">concat</span>(files)
-  }, {stdio<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>inherit<span class="pl-pds">'</span></span>}))
-  .<span class="pl-en">pipe</span>(<span class="pl-en">spawn</span>(<span class="pl-s"><span class="pl-pds">'</span>git<span class="pl-pds">'</span></span>, [<span class="pl-s"><span class="pl-pds">'</span>commit<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>-m<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>npi:<span class="pl-pds">'</span></span><span class="pl-k">+</span><span class="pl-smi">pkg</span>.<span class="pl-c1">version</span>],
-    {stdio<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>inherit<span class="pl-pds">'</span></span>}))
-;</pre></div>
+  }))
+  .<span class="pl-en">pipe</span>(<span class="pl-en">spawn</span>(<span class="pl-s"><span class="pl-pds">'</span>git<span class="pl-pds">'</span></span>, [<span class="pl-s"><span class="pl-pds">'</span>commit<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>-m<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>npi:<span class="pl-pds">'</span></span><span class="pl-k">+</span><span class="pl-smi">pkg</span>.<span class="pl-c1">version</span>]))</pre></div>
 
 <h2>
 <a id="about-the-code" class="anchor" href="#about-the-code" aria-hidden="true"><span class="octicon octicon-link"></span></a>About the code</h2>
