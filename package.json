@@ -1,6 +1,6 @@
 {
   "name": "npi",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Node Project Init",
   "bin": {
     "npi": "./index.js"
