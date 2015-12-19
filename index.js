@@ -1,9 +1,6 @@
 #!/usr/bin/env node
 
 function usage () {/*
-npi
-
- Init a node project.
 
  Usage
    npi [module1 module2]
@@ -25,18 +22,15 @@ npi
  */}
 
 var argv = require('minimist')(process.argv.slice(2));
-
-if (argv.verbose || argv.v) process.env['DEBUG'] = [
-  'bubbler',
-  'message-router'
-].join(' ')
+require('set-verbosity')('npi', process.argv);
+var pkg = require('./package.json')
+require('show-help')(usage, process.argv, pkg)
 
 
 require('console.md')();
 
 var path          = require('path')
 var trim          = require('trim')
-var multiline     = require('multiline')
 var eventStream   = require('event-stream-writer')
 var streamMsger   = require('stream-messenger')
 var messageRouter = require('stream-message-router')
@@ -50,10 +44,6 @@ var genTemplate   = require('./lib/generatetemplate')
 var pipeSpawned   = require('./lib/pipespawned')
 var updatePkg     = require('./lib/updatepackage')
 
-if (argv.h) return console.log(multiline(usage))
-
-
-var pkg     = require('./package.json')
 var files   = [];
 var ignored = [
   'node_modules/',
