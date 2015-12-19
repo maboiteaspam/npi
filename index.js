@@ -71,20 +71,19 @@ var npi = messageRouter('npi');
 npi
   // npm init
   .pipe(spawn('npm', ['init', '--yes']))
-  .pipe(bubble('message',
-    {message: 'file', 'body':'package.json'}))
+  .pipe(bubble('message', {message: 'file', 'body':'package.json'}))
 
   // gather user input
-  .pipe(input('Input the module\'s description :',
-    templateVars, 'description'))
-  .pipe(input('Input the module\'s keywords :',
-    templateVars, 'keywords'))
-  .pipe(choose('Please choose a license :',
-    templateVars, 'license'))
+  .pipe(input('Input the module\'s description :' , templateVars, 'description'))
+  .pipe(input('Input the module\'s keywords :'    , templateVars, 'keywords'))
+  .pipe(choose('Please choose a license :'        , templateVars, 'license'))
+
+  .pipe( !argv['_'].length ? spawn('star', [], {silent: true}) : streamMsger('skip'))
   .pipe( !argv['_'].length
-    ? input('Input the module\'s dependencies :',
-    templateVars, 'dependencies')
+    ? input('Input the module\'s dependencies :', templateVars, 'dependencies')
     : streamMsger('skip') )
+
+  .pipe(spawn('star', ['--dev'], {silent: true}))
   .pipe(input('Input the module\'s devDep\'s :',
     templateVars, 'devDependencies'))
 
