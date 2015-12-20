@@ -4,7 +4,7 @@ Node Project Init. A bit more than `npm init -y`.
 
 ## Install
 
-    npm i maboiteaspam/npi -g
+    npm i @maboiteaspam/npi -g
 
 ## Usage
 
@@ -67,7 +67,12 @@ To increase __major__ number of your package revision.
 
 Check your dependencies status,
 upgrade them if they are outdated.
-under the hood, its `npm outdated --depth=0`.
+under the hood it is using `npm outdated --depth=0`.
+
+#### npm run public
+
+Publish your script on npm,
+under the hood it is using `npm publish --access=public`
 
 __________
 

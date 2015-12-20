@@ -1,5 +1,5 @@
 {
-  "name": "npi",
+  "name": "@maboiteaspam/npi",
   "version": "1.0.11",
   "description": "Node Project Init",
   "bin": {
@@ -13,7 +13,8 @@
     "major": "npm version major -m \"major %s\"",
     "preversion": "echo \"npm test: undefined\" && npi --explicit",
     "version": "echo \"npm run build: undefined\"",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push && git push --tags && npm run public",
+    "public": "npm publish --access=public"
   },
   "keywords": [
     "node",
