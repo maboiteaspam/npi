@@ -1,6 +1,6 @@
 # npi
 
-Node Project Init. A bit more than `npm init -y`.
+Node Project Init. Way more than `npm init -y`.
 
 ## Install
 
@@ -8,31 +8,46 @@ Node Project Init. A bit more than `npm init -y`.
 
 ## Usage
 
-    npi
+```bash
+npi
 
-     Init a node project.
+ Init a node project.
 
-     Usage
-       npi [module1 module2]
-       npi [opts] -- [module1 module2]
+ Usage
+   npi [module1 module2]
+   npi [opts] -- [module1 module2]
 
-     Options
-       -v             verbose
-       -h             show help
-       -b             add bin.js
-       --explicit     invoke rvagg/node-explicit --yes.
+   npi --explicit           Run explicit-deps
+   npi --config             Show config
+   npi --add [module]       Add workflow
+   npi --default [module]   Set default workflow
 
-     Examples
-       npi debug minimist multiline
-       npi -b -- debug minimist multiline
-       npi -v -- debug minimist multiline
+ Options
+   -v                       verbose
+   -h                       show help
+   -w                       Workflow to use
+   --explicit               Invoke rvagg/node-explicit --yes.
+   --add                    Add new init workflow.
+   --default                Set the default workflow
 
-       npi --explicit
-       npi -h
+ Examples
+   npi debug minimist multiline
+   npi -v -- debug minimist multiline
+   npi -w @maboiteaspam/npi-regular -- debug minimist multiline
 
-## Expected result
+   npi --explicit
+   npi -h
+```
 
-A minimal bunch of files to get on work, cooked just for you.
+## Workflow
+
+Workflow is the stream that implement the initialization of the package.
+
+Currently see `npi-regular` workflow.
+
+Workflow are expected to create a
+minimal environment to get on work,
+cooked just for the user.
 
 ```
  - node_modules/
@@ -43,174 +58,53 @@ A minimal bunch of files to get on work, cooked just for you.
  - README.md
 ```
 
-Following `package.json` fields are updated with your input,
+Workflow must perform any action as automated as possible,
+otherwise query for user input at runtime.
 
-- description
-- licence
-- keyword
+Workflow describes your habits, preferences,
+environments requirements,
+when its about a node package setup.
 
-The resulting `package.json` provide a set of script,
+## Build your own
 
-#### npm run patch
+Please consider visiting
 
-To increase __patch__ number of your package revision.
+- https://github.com/maboiteaspam/npi-regular
+- https://github.com/maboiteaspam/npi-utils
 
-#### npm run minor
+#### workflow signature
 
-To increase __minor__ number of your package revision.
+`workflow` are node module which exports a `function(pkg, argv, conf)`,
+which must return a stream `bubbler`
+(one of `stream-messenger`, `stream-router`, `bubbler`, `bubbled`).
 
-#### npm run major
-
-To increase __major__ number of your package revision.
-
-#### npm run dcheck
-
-Check your dependencies status,
-upgrade them if they are outdated.
-under the hood it is using `npm outdated --depth=0`.
-
-#### npm run public
-
-Publish your script on npm,
-under the hood it is using `npm publish --access=public`
-
-__________
-
-The reason of this workflow is to enforce a better usage of `semver`.
-
-Please check more about it at https://github.com/rvagg/npm-explicit-deps
-
-Read also about `npm version` https://docs.npmjs.com/cli/version
-
-Finally, you can take advantage of `preversion` and `version` npm scripts to
-invoke build and test frameworks.
-
-### Complete your workflow
-
-To go further you can check about those repo
-
-- https://github.com/commitizen/cz-cli
-- https://github.com/bahmutov/npm-module-checklist
-
-There s also plenty of grunt, gulp and other modules if you like.
-
-### Scoped package
-
-`npi` make use of scoped package.
-
-Following my personal disappointment about `show-help` package,
-`npi` will use scoped package strategy by default.
-
-It s a better to way to share the same resource all together.
-
-- https://docs.npmjs.com/getting-started/scoped-packages
-- http://blog.npmjs.org/post/116936804365/solving-npms-hard-problem-naming-packages
-
-## Operations Flow
-
-#### For humans only,
-
-- npm init --yes
-- ask you about module `description`
-- ask you about module `keywords` (space delimited)
-- ask you to choose a `licence`
-- ask you about module `dependencies`, unless provided previously (space delimited)
-- ask you about module `dev-dependencies` (space delimited)
-- generate your files
-- npm i [your dependencies]
-- npm i [your dev-dependencies]
-- fix various things in the `package.json` file, for lazy people
-- git init
-- git add <generated files only>
-- git commit -m 'npi:version'
-
-#### Everyone else,
+A simple `workflow` would be
 
 ```js
-var ignored = [
-  'node_modules/',
-  'npm-debug.log'
-];
-
-var templateVars = {
-  name        : path.basename(process.cwd()),
-  description : "Description of the module.",
-  ignored     : ignored,
-  modules     : argv['_']
-};
-
-npi
-  // npm init
-  .pipe(spawn('npm', ['init', '--yes']))
-  .pipe(bubble('message',
-    {message: 'file', 'body':'package.json'}))
-
-  // gather user input
-  .pipe(input('Input the module\'s description :',
-    templateVars, 'description'))
-  .pipe(input('Input the module\'s keywords :',
-    templateVars, 'keywords'))
-  .pipe(choose('Please choose a license :',
-    templateVars, 'license'))
-  .pipe( !argv['_'].length
-    ? input('Input the module\'s dependencies :',
-    templateVars, 'dependencies')
-    : streamMsger('skip') )
-  .pipe(input('Input the module\'s devDep\'s :',
-    templateVars, 'devDependencies'))
-
-   //generate templates
-  .pipe(genTemplate(tplPath, 'README.md'    , templateVars))
-  .pipe(genTemplate(tplPath, 'playground.js', templateVars))
-  .pipe(genTemplate(tplPath, 'index.js'     , templateVars))
-  .pipe(genTemplate(tplPath, '.gitignore'   , templateVars))
-  .pipe( argv.b
-    ? genTemplate(tplPath,  'bin.js'        , templateVars)
-    : streamMsger('skip') )
-
-  // npm module install
-  .pipe(spawn('npm', function (){
-    var modules = trim(templateVars.dependencies).split(/\s/);
-    if (!modules.length || !modules[0].length) return false;
-    return ['i'].concat(modules).concat('--save');
-  }))
-  .pipe(spawn('npm', function (){
-    var modules = trim(templateVars.devDependencies).split(/\s/);
-    if (!modules.length || !modules[0].length) return false;
-    return ['i'].concat(modules).concat('--save-dev');
-  }))
-
-  // fix package.json file
-  .pipe(updatePkg('package.json', function () {
-
-    return {
-      scripts : {
-        "dcheck"      : "npm outdated --depth=0",
-        "patch"       : "npm version patch -m \"patch %s\"",
-        "minor"       : "npm version minor -m \"minor %s\"",
-        "major"       : "npm version major -m \"major %s\"",
-        "preversion"  : "echo \"npm test: not defined\" && npi --explicit",
-        "version"     : "echo \"npm run build: not defined\"",
-        "postversion" : "git push && git push --tags"
-      },
-      bin             : templateVars.bin,
-      license         : templateVars.license,
-      description     : templateVars.description,
-      keywords        : templateVars.keywords.split(/\s/)
-    };
-  }))
-
-  // git init, add, commit
-  .pipe(spawn('git', ['init']))
-  .pipe(spawn('git', function (){
-    return ['add'].concat(files)
-  }))
-  .pipe(spawn('git', ['commit', '-m', 'npi:'+pkg.version]))
+    var messageRouter = require('stream-message-router')
+    var npi = messageRouter('npi');
 ```
+
+It is then possible to enhance the `workflow` in such way,
+
+```js
+    var trimT         = require('@maboiteaspam/npi-utils/trim.js')
+    var spawn         = require('@maboiteaspam/npi-utils/spawn')
+    var bubble        = require('@maboiteaspam/npi-utils/bubble')
+
+    npi
+    .pipe(trimT(templateVars, ['author']))
+    .pipe(spawn('npm', function (){
+        return ['init', '--scope='+templateVars.author, '--yes']
+    }))
+    .pipe(bubble('message', {message: 'file', 'body':'package.json'}))
+```
+
+the latter, the workflow is connected to npi `main` stream, and invoked when necessary.
 
 ## About the code
 
-TLDR: It use a main stream `npi` on which transforms are piped to.
+TLDR: It use a workflow stream `npi` on which transforms are piped to.
 
 They execute in sequence, time management is totally left to the underlying pipe system.
 
@@ -279,6 +173,8 @@ May this drawing you to jump in the code,
 
 ## Read more
 
+- https://github.com/maboiteaspam/npi-regular
+- https://github.com/maboiteaspam/npi-utils
 - https://github.com/maboiteaspam/stream-messenger
 - https://github.com/maboiteaspam/stream-message-router
 - https://github.com/maboiteaspam/flower
