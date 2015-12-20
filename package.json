@@ -23,6 +23,8 @@
   "author": "maboiteaspam",
   "license": "WTF",
   "dependencies": {
+    "@maboiteaspam/npi-regular": "maboiteaspam/npi-regular",
+    "@maboiteaspam/npi-utils": "maboiteaspam/npi-utils",
     "console.md": "maboiteaspam/console.md",
     "event-stream-writer": "maboiteaspam/event-stream-writer",
     "minimist": ">=1.2.0 <2.0.0-0",
