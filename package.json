@@ -1,6 +1,6 @@
 {
   "name": "@maboiteaspam/npi",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Node Project Init",
   "bin": {
     "npi": "./index.js"
@@ -24,8 +24,8 @@
   "author": "maboiteaspam",
   "license": "WTF",
   "dependencies": {
-    "@maboiteaspam/npi-regular": "^1.0.5",
-    "@maboiteaspam/npi-utils": "^1.0.3",
+    "@maboiteaspam/npi-regular": ">=1.0.5 <2.0.0-0",
+    "@maboiteaspam/npi-utils": ">=1.0.3 <2.0.0-0",
     "configstore": ">=1.4.0 <2.0.0-0",
     "console.md": "maboiteaspam/console.md",
     "event-stream-writer": "maboiteaspam/event-stream-writer",
