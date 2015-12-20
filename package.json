@@ -26,13 +26,13 @@
   "dependencies": {
     "@maboiteaspam/npi-regular": ">=1.0.5 <2.0.0-0",
     "@maboiteaspam/npi-utils": ">=1.0.3 <2.0.0-0",
+    "@maboiteaspam/set-verbosity": "^2.0.0",
+    "@maboiteaspam/show-help": "^2.0.0",
     "configstore": ">=1.4.0 <2.0.0-0",
     "console.md": "maboiteaspam/console.md",
     "event-stream-writer": "maboiteaspam/event-stream-writer",
     "minimist": ">=1.2.0 <2.0.0-0",
     "npm-explicit-deps": ">=1.0.2 <2.0.0-0",
-    "set-verbosity": "maboiteaspam/set-verbosity",
-    "show-help": "maboiteaspam/show-help",
     "stream-message-router": "maboiteaspam/stream-message-router",
     "stream-messenger": "maboiteaspam/stream-messenger"
   },

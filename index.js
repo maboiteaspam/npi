@@ -28,9 +28,9 @@ function usage () {/*
  */}
 
 var argv = require('minimist')(process.argv.slice(2));
-require('set-verbosity')('npi', process.argv);
+require('@maboiteaspam/set-verbosity')('npi', process.argv);
 var pkg = require('./package.json')
-require('show-help')(usage, process.argv, pkg)
+require('@maboiteaspam/show-help')(usage, process.argv, pkg)
 
 
 require('console.md')();
