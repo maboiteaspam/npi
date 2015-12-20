@@ -268,3 +268,5 @@ May this drawing you to jump in the code,
 - https://github.com/maboiteaspam/bubbler
 - https://github.com/maboiteaspam/bubbled
 - https://github.com/maboiteaspam/event-stream-writer
+- https://github.com/maboiteaspam/set-verbosity
+- https://github.com/maboiteaspam/show-help
