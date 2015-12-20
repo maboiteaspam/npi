@@ -13,9 +13,9 @@ function usage () {/*
    --explicit     invoke rvagg/node-explicit --yes.
 
  Examples
-   npi debug minimist multiline
-   npi -b -- debug minimist multiline
-   npi -v -- debug minimist multiline
+   npi debug set-verbosity show-help
+   npi -b -- debug set-verbosity show-help
+   npi -v -- debug set-verbosity show-help
 
    npi --explicit
    npi -h
@@ -30,11 +30,12 @@ require('show-help')(usage, process.argv, pkg)
 require('console.md')();
 
 var path          = require('path')
-var trim          = require('trim')
+var trimT         = require('./lib/trim')
 var eventStream   = require('event-stream-writer')
 var streamMsger   = require('stream-messenger')
 var messageRouter = require('stream-message-router')
 var spawn         = require('./lib/spawn')
+var spawnCopy     = require('./lib/spawn-copy')
 var choose        = require('./lib/inquire-licence')
 var input         = require('./lib/inquire-input')
 var bubble        = require('./lib/bubble')
@@ -55,6 +56,7 @@ var name = path.basename(process.cwd());
 var templateVars  = {
   name            : name,
   description     : "Description of the module.",
+  author          : '',
   license         : 'WTF',
   keywords        : '',
   ignored         : ignored,
@@ -69,14 +71,20 @@ console.log('npi %s', pkg.version)
 
 var npi = messageRouter('npi');
 npi
+  // use npm author as username
+  .pipe(spawnCopy.stdout('npm', ['config', 'get', 'init.author.name'], templateVars, 'author'))
+  .pipe(trimT(templateVars, ['author']))
   // npm init
-  .pipe(spawn('npm', ['init', '--yes']))
+  .pipe(spawn('npm', function (){
+    return ['init', '--scope='+templateVars.author, '--yes']
+  }))
   .pipe(bubble('message', {message: 'file', 'body':'package.json'}))
 
   // gather user input
   .pipe(input('Input the module\'s description :' , templateVars, 'description'))
   .pipe(input('Input the module\'s keywords :'    , templateVars, 'keywords'))
   .pipe(choose('Please choose a license :'        , templateVars, 'license'))
+  .pipe(trimT(templateVars, ['description','keywords','license']))
 
   .pipe( !argv['_'].length ? spawn('star', [], {silent: true}) : streamMsger('skip'))
   .pipe( !argv['_'].length
@@ -86,6 +94,7 @@ npi
   .pipe(spawn('star', ['--dev'], {silent: true}))
   .pipe(input('Input the module\'s devDep\'s :',
     templateVars, 'devDependencies'))
+  .pipe(trimT(templateVars, ['dependencies', 'devDependencies']))
 
    //generate templates
   .pipe(genTemplate(tplPath, 'README.md'    , templateVars))
@@ -98,12 +107,12 @@ npi
 
   // npm module install
   .pipe(spawn('npm', function (){
-    var modules = trim(templateVars.dependencies).split(/\s/);
+    var modules = templateVars.dependencies.split(/\s/);
     if (!modules.length || !modules[0].length) return false;
     return ['i'].concat(modules).concat('--save');
   }))
   .pipe(spawn('npm', function (){
-    var modules = trim(templateVars.devDependencies).split(/\s/);
+    var modules = templateVars.dependencies.split(/\s/);
     if (!modules.length || !modules[0].length) return false;
     return ['i'].concat(modules).concat('--save-dev');
   }))

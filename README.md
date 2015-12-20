@@ -66,7 +66,7 @@ To increase __major__ number of your package revision.
 #### npm run dcheck
 
 Check your dependencies status,
-upgrade tham if they are outdated.
+upgrade them if they are outdated.
 under the hood, its `npm outdated --depth=0`.
 
 __________
@@ -88,6 +88,18 @@ To go further you can check about those repo
 - https://github.com/bahmutov/npm-module-checklist
 
 There s also plenty of grunt, gulp and other modules if you like.
+
+### Scoped package
+
+`npi` make use of scoped package.
+
+Following my personal disappointment about `show-help` package,
+`npi` will use scoped package strategy by default.
+
+It s a better to way to share the same resource all together.
+
+- https://docs.npmjs.com/getting-started/scoped-packages
+- http://blog.npmjs.org/post/116936804365/solving-npms-hard-problem-naming-packages
 
 ## Operations Flow
 
