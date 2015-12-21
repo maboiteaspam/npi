@@ -36,9 +36,9 @@ require('@maboiteaspam/show-help')(usage, process.argv, pkg)
 require('console.md')();
 
 var Configstore   = require('configstore');
-var eventStream   = require('event-stream-writer')
-var streamMsger   = require('stream-messenger')
-var messageRouter = require('stream-message-router')
+var eventStream   = require('@maboiteaspam/event-stream-writer')
+var streamMsger   = require('@maboiteaspam/stream-messenger')
+var messageRouter = require('@maboiteaspam/stream-message-router')
 var spawn         = require('@maboiteaspam/npi-utils/spawn')
 var extract       = require('@maboiteaspam/npi-utils/extract')
 var pipeSpawned   = require('@maboiteaspam/npi-utils/pipespawned')
