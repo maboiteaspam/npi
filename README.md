@@ -72,6 +72,14 @@ Please consider visiting
 - https://github.com/maboiteaspam/npi-regular
 - https://github.com/maboiteaspam/npi-utils
 
+__tips__
+
+Use `-v` to check the workflow errors while using `npi`.
+
+```
+npi -v -- mod1...
+```
+
 #### workflow signature
 
 `workflow` are node module which exports a `function(pkg, argv, conf)`,

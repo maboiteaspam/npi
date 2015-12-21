@@ -28,12 +28,12 @@ function usage () {/*
  */}
 
 var argv = require('minimist')(process.argv.slice(2));
-require('@maboiteaspam/set-verbosity')('npi', process.argv);
+var debug = require('@maboiteaspam/set-verbosity')('npi', process.argv);
 var pkg = require('./package.json')
 require('@maboiteaspam/show-help')(usage, process.argv, pkg)
 
 
-require('console.md')();
+require('@maboiteaspam/console.md')();
 
 var Configstore   = require('configstore');
 var eventStream   = require('@maboiteaspam/event-stream-writer')
@@ -68,6 +68,7 @@ try {
   });
   main.pipe(npi);
 }catch(ex){
+  debug(ex)
   console.error('can not load workflow: '+workflow)
 }
 
