@@ -27,9 +27,9 @@ function usage () {/*
    npi -h
  */}
 
-var argv = require('minimist')(process.argv.slice(2));
-var debug = require('@maboiteaspam/set-verbosity')('npi', process.argv);
 var pkg = require('./package.json')
+var argv = require('minimist')(process.argv.slice(2));
+var debug = require('@maboiteaspam/set-verbosity')(pkg.name, process.argv);
 require('@maboiteaspam/show-help')(usage, process.argv, pkg)
 
 
@@ -51,7 +51,7 @@ var action = 'npi';
 if (argv.explicit)  action = 'explicit'
 if (argv.add)       action = 'add'
 if (argv.default)   action = 'default'
-if (argv.config)   action = 'config'
+if (argv.config)    action = 'config'
 
 var conf      = new Configstore(pkg.name, {workflow: ''});
 
