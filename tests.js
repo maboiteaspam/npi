@@ -8,7 +8,9 @@ before(function () {
   fs.removeSync('tomate')
   fs.mkdirsSync('tomate')
 
-  require('child_process').spawn('npi', ['-b', '--wd', 'tomate'])
+  var c = require('child_process').spawn('npi', ['-b', '--wd', 'tomate'])
+  c.stdout.pipe(process.stdout)
+  c.stderr.pipe(process.stderr)
 })
 
 describe('some stuff', function () {
