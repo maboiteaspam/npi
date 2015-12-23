@@ -9,6 +9,7 @@ function usage () {/*
    npi --config             Show config
    npi --add [module]       Add workflow
    npi --default [module]   Set default workflow
+   npi --wd [path]          Set the working directory
 
  Options
    -v                       verbose
@@ -17,6 +18,7 @@ function usage () {/*
    --explicit               Invoke rvagg/node-explicit --yes.
    --add                    Add new init workflow.
    --default                Set the default workflow
+   --wd                     Set the working directory
 
  Examples
    npi debug minimist multiline
@@ -27,11 +29,12 @@ function usage () {/*
    npi -h
  */}
 
-var pkg = require('./package.json')
-var argv = require('minimist')(process.argv.slice(2));
+var pkg   = require('./package.json')
+var argv  = require('minimist')(process.argv.slice(2));
 var debug = require('@maboiteaspam/set-verbosity')(pkg.name, process.argv);
 require('@maboiteaspam/show-help')(usage, process.argv, pkg)
 
+if (argv.wd) process.chdir(argv.wd)
 
 require('@maboiteaspam/console.md')();
 

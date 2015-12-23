@@ -6,7 +6,7 @@
     "npi": "./index.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha tests",
     "dcheck": "npm outdated --depth=0",
     "patch": "npm version patch -m \"patch %s\"",
     "minor": "npm version minor -m \"minor %s\"",
@@ -36,7 +36,11 @@
     "minimist": ">=1.2.0 <2.0.0-0",
     "npm-explicit-deps": ">=1.0.2 <2.0.0-0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "fs-extra": "^0.26.3",
+    "mocha": "^2.3.4",
+    "should": "^8.0.2"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/maboiteaspam/npi.git"

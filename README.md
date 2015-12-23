@@ -191,3 +191,26 @@ May this drawing you to jump in the code,
 - https://github.com/maboiteaspam/event-stream-writer
 - https://github.com/maboiteaspam/set-verbosity
 - https://github.com/maboiteaspam/show-help
+
+
+## Develop
+
+```bash
+mkdir npi
+cd npi
+git clone git@github.com:maboiteaspam/npi.git
+git clone git@github.com:maboiteaspam/npi-utils.git
+git clone git@github.com:maboiteaspam/npi-regular.git
+
+cd npi
+npm i && npm link ../npi-utils
+npm i && npm link ../npi-regular
+
+mkdir tomate
+cd tomate
+npi -d @maboiteaspam/npi-regular
+npi --link ../npi-regular
+npi
+```
+
++/- like this.
