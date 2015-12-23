@@ -11,7 +11,7 @@
     "patch": "npm version patch -m \"patch %s\"",
     "minor": "npm version minor -m \"minor %s\"",
     "major": "npm version major -m \"major %s\"",
-    "preversion": "echo \"npm test: undefined\" && npi --explicit",
+    "preversion": "echo \"npm test: undefined\" && npi --changelog && npi --explicit",
     "version": "echo \"npm run build: undefined\"",
     "postversion": "git push && git push --tags && npm run public",
     "public": "npm publish --access=public"
@@ -32,6 +32,7 @@
     "@maboiteaspam/show-help": ">=2.0.0 <3.0.0-0",
     "@maboiteaspam/stream-message-router": ">=2.0.0 <3.0.0-0",
     "@maboiteaspam/stream-messenger": ">=2.0.0 <3.0.0-0",
+    "changelog-maker": "^2.0.0",
     "configstore": ">=1.4.0 <2.0.0-0",
     "minimist": ">=1.2.0 <2.0.0-0",
     "npm-explicit-deps": ">=1.0.2 <2.0.0-0"

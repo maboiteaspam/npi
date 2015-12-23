@@ -65,6 +65,14 @@ Workflow describes your habits, preferences,
 environments requirements,
 when its about a node package setup.
 
+## explicit && changelog
+
+Worth to note that two utilities are embedded for your convenience
+
+- https://github.com/rvagg/changelog-maker
+- https://github.com/rvagg/npm-explicit-deps
+
+
 ## Build your own
 
 Please consider visiting

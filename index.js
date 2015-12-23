@@ -6,6 +6,7 @@ function usage () {/*
    npi [opts] -- [module1 module2]
 
    npi --explicit           Run explicit-deps
+   npi --changelog          Run changelog-maker --simple -a
    npi --config             Show config
    npi --add [module]       Add workflow
    npi --default [module]   Set default workflow
@@ -52,9 +53,10 @@ var setConfig     = require('@maboiteaspam/npi-utils/set-config')
 
 var action = 'npi';
 if (argv.explicit)  action = 'explicit'
-if (argv.add)       action = 'add'
-if (argv.default)   action = 'default'
-if (argv.config)    action = 'config'
+else if (argv.changelog)  action = 'changelog'
+else if (argv.add)       action = 'add'
+else if (argv.default)   action = 'default'
+else if (argv.config)    action = 'config'
 
 var conf      = new Configstore(pkg.name, {workflow: ''});
 
@@ -82,6 +84,16 @@ explicit
     '-y'
   ]))
 
+var changelog = messageRouter('changelog');
+changelog
+  .pipe(spawn('node', [
+    __dirname+'/node_modules/changelog-maker/changelog-maker.js', '--simple', '-a'
+  ], {stdio: 'pipe'}))
+  .on('message', function (d){
+    if (d.message==='spawn')
+      d.body.stdout.pipe(require('fs').createWriteStream('CHANGELOG.md'))
+  })
+
 var add = messageRouter('add');
 add.pipe(notBool(argv, 'add', 'a'))
   .pipe(spawn('npm', ['i', '--prefix', __dirname, (argv.add || argv.a)]))
@@ -98,6 +110,7 @@ viewConfig.pipe(print(JSON.stringify(conf.all, null, 4)))
 
 
 main.pipe(explicit);
+main.pipe(changelog);
 main.pipe(add);
 main.pipe(setDefault);
 main.pipe(viewConfig);
