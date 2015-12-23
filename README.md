@@ -1,6 +1,6 @@
 # npi
 
-Node Project Init. Way more than `npm init -y`.
+Node Project Init.
 
 ## Install
 
