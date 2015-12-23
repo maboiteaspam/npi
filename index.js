@@ -6,7 +6,7 @@ function usage () {/*
    npi [opts] -- [module1 module2]
 
    npi --explicit           Run explicit-deps
-   npi --changelog          Run changelog-maker --simple -a
+   npi --changelog          Run changelog-maker --simple
    npi --config             Show config
    npi --add [module]       Add workflow
    npi --default [module]   Set default workflow
@@ -87,11 +87,11 @@ explicit
 var changelog = messageRouter('changelog');
 changelog
   .pipe(spawn('node', [
-    __dirname+'/node_modules/changelog-maker/changelog-maker.js', '--simple', '-a'
+    __dirname+'/node_modules/changelog-maker/changelog-maker.js', '--simple', '-a'// to improve, remove -a
   ], {stdio: 'pipe'}))
   .on('message', function (d){
     if (d.message==='spawn')
-      d.body.stdout.pipe(require('fs').createWriteStream('CHANGELOG.md'))
+      d.body.stdout.pipe(require('fs').createWriteStream('CHANGELOG.md')) // create and add stream-file-prepend
   })
 
 var add = messageRouter('add');
