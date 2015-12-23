@@ -206,11 +206,7 @@ cd npi
 npm i && npm link ../npi-utils
 npm i && npm link ../npi-regular
 
-mkdir tomate
-cd tomate
-npi -d @maboiteaspam/npi-regular
-npi --link ../npi-regular
-npi
+npm test
 ```
 
 +/- like this.
