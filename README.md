@@ -31,7 +31,7 @@ npi
    --default                Set the default workflow
 
  Examples
-   npi debug minimist multiline
+   npi debug minimist @maboiteaspam/set-verbosity @maboiteaspam/show-help
    npi -v -- debug minimist multiline
    npi -w @maboiteaspam/npi-regular -- debug minimist multiline
 
